@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><title>利用CloudFlare Worker来搭建免费高速的博客 | FutureApple的博客</title><meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"><meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"><meta name="renderer" content="webkit"><link rel="icon" href="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/images/logo.png"><script type="text/javascript">
+var pandastudio_framework = {"current_user":{"logged_in":false,"name":false,"email":false,"id":0}};
+</script><link href="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/niRvana32/dark.css.css" rel="stylesheet" type="text/css" /><link href="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/niRvana32/icon.css" rel="stylesheet" type="text/css" /><script language=javascript>window.onerror = function(){return true;}</script></head><body class="black-color dark-slider"><div id="wrapper"><div class="row">
+<div class="main-nav float"><div class="container" style="height: 100%;"><div class="row" style="height: 100%;"><div class="col-sm-12 col-md-3 logo"><a href="../index.html"><img src="https://cdn233.2890.ltd/2020/03/19/64ee1f31edafc.png"></a></div><div class="col-sm-12 col-md-8 col-xl-8_5 menu-wrap">
+<div class="menuLeft">
+</div><div class="searchRight visible-xs visible-sm" style="margin-right: -8px;
+    margin-top: -48px;"><div class="normal_searchBtn" style="" onclick="javascript:location.href='https://lo-li.icu/search.html'"><i class="icon font_family icon-search"></i></div></div>
+<div pandatab="" class="topNav" style="width:100%" active-class=".current-menu-item,.current-menu-ancestor" sub-class=".sub-menu">
+<ul class="menu">
+<li class="menu-item "><a href="../index.html"><i class="icon font_family icon-home"></i> 首页</a></li>
+<li class="menu-item " style="display:inline-block!important">
+<a href="../friends.html" title="友人帐"><i class=""></i> 友人帐</a>
+</li>
+<li class="menu-item " style="display:inline-block!important">
+<a href="../guestbook.html" title="留言"><i class=""></i> 留言</a>
+</li>
+<li class="menu-item " style="display:inline-block!important">
+<a href="../about.html" title="关于"><i class=""></i> 关于</a>
+</li>
+</ul>
+</div></div><div class="col-md-1 col-xl-0_5 hidden-xs hidden-sm"><div class="normal_searchBtn" style="" onclick="javascript:location.href='https://lo-li.icu/search.html'"><i class="icon font_family icon-search"></i></div></div><div class="mobileNavMenuBtn visible-xs visible-sm"><div class="menuIcon" @click="this.toggle_mobile_menu()"><div class="bread bread1"></div><div class="bread bread2"></div><div class="bread bread3"></div></div></div></div></div></div></div>
+<div id="main"><div class="container coverflow-wrapper"><div id="coverflow" class="unfull"><div class="showBox"><div class="current"><div class="page"><div class="container flex-row-middle coverflow"><div class="content flex-column-middle" style="width: 100%;"><div class="category"><a href="../category/杂项.html">杂项</a></div><h1>利用CloudFlare Worker来搭建免费高速的博客</h1></div>
+<div class="image flex-center">
+<div class="card" style="background-image: url(https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg);"></div>
+</div>
+</div></div></div></div>
+<div class="imgColor" style="background:url(https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg) no-repeat;-webkit-filter: blur(50px);-moz-filter: blur(50px);-ms-filter: blur(50px);filter: blur(50px);transform: scale(1.2);background-size:cover;background-position: center;"></div>
+</div></div>
+<div class="container postListsModel"><div class="row"><div class="col-md-12 col-lg-12"><div class="col-xs-12"><div class="row postLists"><div class="article_wrapper post clearfix"><div class="meta"><span class="inline-block"><i class="icon font_family icon-clock"></i>1月13日 · 2020年</span><span class="inline-block"><i class="icon font_family icon-bookmark"></i><a href="../category/杂项.html">杂项</a></span>
+</div><article class="clearfix">
+<p>注意：本篇文章部份内容引用了<a href="https://2890.ltd">2890</a>和<a href="https://blog.natfrp.org">kasuganosoras</a>的内容</p><p><img src="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/images/workerblog/NatFrpBlog.png" alt="示例博客" title="示例博客"></p><p><img src="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/images/workerblog/Github-Worker-Blog.png" alt="Github页面" title="Github页面"></p><h2>是什么?</h2><p>Cloudflare workers + Github 实现的动态博客系统，使用边缘计算，无需服务器，Workers是CloudFlare提供的边缘计算，每天有10万次的访问次数，而且速度十分快。</p><h1>源代码</h1><p><a href="https://github.com/kasuganosoras/cloudflare-worker-blog">Github项目地址</a></p><p>伸手党可以直接复制下面这个我修改了CDN节点的版本，因为官方的CDN不稳定。</p><pre><code class="lang-js">// 定义 Github 项目，文章会从这里读取
+const github_base = &quot;kasuganosoras/frp-blog&quot;;
+
+// 设置站点信息
+var default_title     = &quot;SakuraFrp Blog - 樱花内网穿透官方博客&quot;;                    // 站点标题（显示在浏览器标题栏）
+var default_intitle     = &quot;SakuraFrp Blog&quot;;                                // 站点名称（显示在首页）
+var default_description  = &quot;欢迎访问 Sakura Frp 官方博客，本博客分享与 Frp 相关的技术以及记录一些日常。&quot;;     // 站点简介，有利于 SEO
+var site_domain         = &quot;blog.natfrp.org&quot;;                                // 站点域名
+var site_subtitle     = &quot;樱花内网穿透官方博客&quot;;                            // 站点副标题
+var site_favicon     = &quot;https://cn.tql.ink:4443/gitea/img/favicon.png&quot;;                // 站点 Logo
+
+// 博主信息
+var owner_name = &quot;Akkariin&quot;;                                    // 博主名字
+var owner_logo = &quot;https://secure.gravatar.com/avatar/80962ca1ced98d0e679b2bc315d049f2?s=256&quot;    // 博主头像
+var owner_desc = &quot;鸽子王/咸鱼/phper，日常水贴摸鱼，佛系出租服务器&quot;;                    // 博主简介
+
+// 设置站点资源文件地址
+var css_bootstrap     = &quot;https://cdn.lo-li.icu/wwf/bootstrap.min.css&quot;;    // Boostrap css 文件地址
+var css_hljs_github   = &quot;https://cdn.lo-li.icu/wwf/github.css&quot;;  // Highlight js css 地址
+var js_jquery         = &quot;https://cdn.lo-li.icu/wwf/jquery.min.js&quot;;        // JQuery 地址
+var js_bootstrap    = &quot;https://cdn.lo-li.icu/wwf/bootstrap.min.js&quot;;    // Bootstrap 地址
+var js_instantclick   = &quot;https://cdn.lo-li.icu/wwf/instantclick.min.js&quot;;    // InstantClick 地址
+var js_showdown     = &quot;https://cdn.lo-li.icu/wwf/showdown.min.js&quot;;        // Showdown 地址
+var js_showdown_table = &quot;https://cdn.lo-li.icu/wwf/showdown-table.min.js&quot;;    // Showdown table 地址
+var js_highlight    = &quot;https://cdn.lo-li.icu/wwf/highlight.min.js&quot;;    // Highlight 地址
+var js_highlight_pack = &quot;https://cdn.lo-li.icu/wwf/highlight.pack.js&quot;;        // Highlight pack 地址
+
+// 这是一些临时变量，无需修改
+var title = &quot;&quot;;
+var intitle = &quot;&quot;;
+var title2 = &quot;&quot;;
+var description = &quot;&quot;;
+var ctime = &quot;unknown&quot;;
+var isunknown = &quot;&quot;;
+
+addEventListener('fetch', event =&gt; {
+  event.respondWith(handleRequest(event.request))
+});
+
+var header = `&lt;!DOCTYPE HTML&gt;
+&lt;!-- 由 CloudFlare Workers Blog 强力驱动 --&gt;
+&lt;!-- SakuraFrp Blog 模板 1.0 by Akkariin --&gt;
+&lt;html lang=&quot;zh_CN&quot;&gt;
+    &lt;head&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+        &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=11&quot;&gt;
+        &lt;meta name=&quot;application-name&quot; content=&quot;SakuraFrp Blog&quot;&gt;
+        &lt;meta name=&quot;msapplication-TileColor&quot; content=&quot;#F1F1F1&quot;&gt;
+        &lt;link rel=&quot;shortcut icon&quot; href=&quot;${site_favicon}&quot; /&gt;
+        &lt;meta name=&quot;description&quot; content=&quot;{description}&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;${css_bootstrap}&quot; crossorigin=&quot;anonymous&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;${css_hljs_github}&quot;&gt;
+        &lt;title&gt;{title}{title_2}&lt;/title&gt;
+        &lt;style type=&quot;text/css&quot;&gt;.pageid{margin-bottom:-26px}code{color:#484848;background-color:#f5f5f5;border-radius:0px;border:1px solid #dadada;}pre&gt;code{color:unset;background-color:unset;border-radius:unset;border:0px;}.post-a {color: #000;text-decoration: none ! important;}.post-box {padding: 12px 20px 12px 20px;border-bottom: 1px solid rgba(0,0,0,0.07);cursor: pointer;border-left: 0px solid rgba(66, 66, 66, 0);transition-duration: 0.3s;}.post-box:hover {transition-duration: 0.3s;border-left: 5px solid rgba(66, 66, 66, 0.15);}.thread h2 {border-bottom: 1px solid rgb(238,238,238);padding-bottom: 10px;}.editor-preview pre, .editor-preview-side pre{padding: 0.5em;}.hljs{background: unset ! important;padding: 0px;}.CodeMirror{height: calc(100% - 320px);min-height: 360px;}.msgid{font-family:Consolas;}.tooltip {word-break: break-all;}h2 a{font-weight: 400;}body{/*background:url(https://i.natfrp.org/cbf5973ce9da283bc9abe307cdea7f30.jpg);*/font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Helvetica','Arial','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol' ! important;font-weight:400;background-attachment:fixed;background-size:cover;background-repeat:no-repeat;background-position:center;}h2 a{color: #000;} h2 a:hover{color: #000; text-decoration: none;}.full-width{width: 100%;}.thread img{vertical-align:text-bottom ! important;max-width:100% ! important;margin-top:8px;margin-bottom:8px;}.thread table{display:block;width:100%;overflow:auto;margin-bottom:8px;}.thread table tr{background-color:#fff;border-top:1px solid #c6cbd1;}.thread table tr:nth-child(2n){background-color:#f7f7f7;}.thread table th,.thread table td{padding:10px 12px 0px 12px;border:1px solid #dfe2e5;font-size:14px;}.thread table th {padding-bottom: 10px;background: #f7f7f7;}.thread pre{margin-bottom:16px;}pre{border:none ! important;}blockquote{font-size:15px ! important;}@media screen and(max-width:768px){.copyright{text-align:center;}}&lt;/style&gt;
+        &lt;script&gt;
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement(&quot;script&quot;);
+            hm.src = &quot;https://hm.baidu.com/hm.js?b1f3cc985ea87c4141634fa0572a1612&quot;;
+            var s = document.getElementsByTagName(&quot;script&quot;)[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;container&quot;&gt;
+            &lt;div class=&quot;row&quot;&gt;
+                &lt;div class=&quot;col-sm-12&quot;&gt;
+                    &lt;h2&gt;&lt;a href=&quot;/&quot; class=&quot;post-a&quot;&gt;{intitle}&lt;/a&gt;&lt;/h2&gt;
+                    &lt;p&gt;${site_subtitle}&lt;/p&gt;
+                    &lt;hr&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;div class=&quot;thread&quot;&gt;
+                        `;
+
+var modifyHeader = {};
+var cookieText = &quot;&quot;;
+
+function getRequestParams(str) {
+    var index = str.indexOf(&quot;?&quot;);
+    str = str.substring(index + 1, str.length);
+    if(typeof(str) == &quot;string&quot;){
+        u = str.split(&quot;&amp;&quot;);
+        var get = {};
+        for(var i in u){
+            var j = u[i].split(&quot;=&quot;);
+            get[j[0]] = j[1];
+        }
+        return get;
+    } else {
+        return {};
+    }
+}
+
+async function bloghandle(request) {
+    var cookie = {};
+    var clist = undefined;
+    try {
+        cookieText.split(';').forEach(l =&gt; {
+            var parts = l.split('=');
+            cookie[parts[0].trim()] = unescape((parts[1] || '').trim());
+        });
+    } catch(e) {
+        // 无可奉告
+    }
+    var $_GET = getRequestParams(request.url);
+    var urls = new URL(request.url);
+    var data = header;
+    if(urls.pathname == &quot;/&quot;) {
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+        const init = {
+        method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        var resptxt = await response.text();
+        if(cookie['list'] == undefined) {
+            var Days = 30; 
+            var exp = new Date(); 
+            exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+            modifyHeader = {
+                &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (resptxt) + &quot;;expires=&quot; + exp.toGMTString()
+            };
+        }
+        var json = JSON.parse(resptxt);
+        // console.log(json);
+        data += `&lt;p&gt;所有文章&lt;/p&gt;
+                        `;
+        var before_page = 0;
+        var current_page = 1;
+        var next_page = 2;
+        var pagenow = json.length;
+        var pageval = json.length - 5;
+        if($_GET['p'] != undefined &amp;&amp; $_GET['p'] != &quot;&quot;) {
+            pageval = json.length - (parseInt($_GET['p']) * 5);
+            pagenow = json.length - ((parseInt($_GET['p']) - 1) * 5) - 1;
+            next_page = parseInt($_GET['p']) + 1;
+            current_page = parseInt($_GET['p']);
+            before_page = parseInt($_GET['p']) - 1;
+        }
+        console.log(pageval);
+        var update_i = 0;
+        for(var i = pagenow;i &gt;= pageval;i--) {
+        try {
+            var tmpfilename = encodeURIComponent(json[i].file
+            .replace(/&quot;/g, &quot;&quot;).replace(/posts\//ig, &quot;&quot;).replace(/\.md/ig, &quot;&quot;));
+            var tmptime = json[i].time;
+            var tmptitle = json[i].title;
+            data += `&lt;a href=&quot;/${tmpfilename}&quot; class=&quot;post-a&quot;&gt;
+                            &lt;div class=&quot;post-box&quot;&gt;
+                                &lt;h4&gt;${tmptitle}&lt;/h4&gt;
+                                &lt;p&gt;发表于 ${tmptime}&lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;/a&gt;
+                        `;
+            update_i++;
+        } catch(e) {
+            // 收声
+        }
+        }
+        console.log(update_i);
+        if(update_i == 0) {
+        data += `&lt;p&gt;&lt;blockquote&gt;暂时没有文章！&lt;/blockquote&gt;&lt;/p&gt;
+                `
+        }
+        data += `&lt;br&gt;
+                        &lt;p class=&quot;text-left pageid&quot;&gt;当前在第 ${current_page} 页&lt;/p&gt;
+                        &lt;p class=&quot;text-right&quot;&gt;
+                            `;
+        if(current_page &gt; 1) {
+        data += `&lt;a href=&quot;/?p=${before_page}&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;上一页&lt;/button&gt;&lt;/a&gt;&amp;nbsp; &amp;nbsp;`;
+        }
+        if(update_i &gt;= 5) {
+        data += `&lt;a href=&quot;/?p=${next_page}&quot;&gt;&lt;button class=&quot;btn btn-default&quot;&gt;下一页&lt;/button&gt;&lt;/a&gt;`;
+        }
+        data += `
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                `;
+        title = default_title;
+        intitle = default_intitle;
+        title2 = &quot;&quot;;
+    } else {
+        var uname = unescape(&quot;posts&quot; + urls.pathname + &quot;.md&quot;);
+        try {
+        clist = cookie['list'];
+        } catch(e) {
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+        const init = {
+            method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        clist = await response.text();
+        }
+        if(clist != undefined) {
+            try {
+                var json = JSON.parse(clist);
+                var found = false;
+                for(var i in json) {
+                    tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                    tmptime = json[i].time;
+                    tmptitle = json[i].title;
+                    if(tmpfilename == uname) {
+                        title = tmptitle;
+                        intitle = tmptitle;
+                        ctime = tmptime;
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+                    const init = {
+                        method: &quot;GET&quot;
+                    };
+                    const response = await fetch(url, init);
+                    clist = await response.text();
+                    var json = JSON.parse(clist);
+                    for(var i in json) {
+                        tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                        tmptime = json[i].time;
+                        tmptitle = json[i].title;
+                        if(tmpfilename == uname) {
+                            title = tmptitle;
+                            intitle = tmptitle;
+                            ctime = tmptime;
+                        }
+                    }
+                    var Days = 30; 
+                    var exp = new Date(); 
+                    exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+                    modifyHeader = {
+                        &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (clist) + &quot;;expires=&quot; + exp.toGMTString()
+                    };
+                }
+            } catch(e) {
+                // 收声
+            }
+        } else {
+            var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+            const init = {
+                method: &quot;GET&quot;
+            };
+            const response = await fetch(url, init);
+            var clist = await response.text();
+            var json = JSON.parse(clist);
+            for(var i in json) {
+                tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                tmptime = json[i].time;
+                tmptitle = json[i].title;
+                if(tmpfilename == uname) {
+                    title = tmptitle;
+                    intitle = tmptitle;
+                    ctime = tmptime;
+                }
+            }
+            var Days = 30; 
+            var exp = new Date(); 
+            exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+            modifyHeader = {
+                &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (clist) + &quot;;expires=&quot; + exp.toGMTString()
+            };
+        }
+        data += `&lt;/div&gt;
+                        &lt;p class=&quot;text-center{isunknown}&quot;&gt;&lt;small&gt;发表于 ${ctime}&lt;/small&gt;&lt;/p&gt;
+                        &lt;textarea id=&quot;textdata&quot; style=&quot;display: none;&quot;&gt;`;
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/posts&quot; + urls.pathname + &quot;.md&quot;;
+        const init = {
+            method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        if(response.status == 200) {
+            var resptxt = await response.text();
+            data += resptxt.replace(/&amp;/g, &quot;&amp;amp;&quot;).replace(/&lt;/g, &quot;&amp;lt;&quot;).replace(/&gt;/g, &quot;&amp;gt;&quot;);
+            description = resptxt.substring(0, 128).replace(/&quot;/ig, &quot;&quot;).replace(/\n/g, &quot; &quot;);
+            data += `&lt;/textarea&gt;
+                    &lt;hr&gt;
+                    &lt;div id=&quot;comments&quot;&gt;评论区加载中 qwq&lt;/div&gt;
+                `;
+        } else {
+            data += `### 404 Not Found
+未找到您访问的页面，原因可能是：
+- 该文章已被删除
+- 该文章已经更改名称
+- 您输入的链接不正确
+&lt;a href=&quot;/&quot;&gt;返回 ${default_intitle} 首页&lt;/a&gt;
+                    &lt;/textarea&gt;
+                `;
+            title = `404 Not Found`;
+            title2 = ` - ${default_title}`;
+            intitle = `未找到指定的页面`;
+            description = ``;
+            isunknown = &quot; hidden&quot;;
+        }
+        title2 = ` - ${default_title}`;
+    }
+    data += `&lt;/div&gt;
+                &lt;div class=&quot;col-sm-3&quot;&gt;
+                    &lt;div style=&quot;padding: 16px;text-align: center;&quot;&gt;
+                        &lt;img src=&quot;${owner_logo}&quot; style=&quot;max-width: 220px;width: 100%;border-radius: 50%;&quot;&gt;
+                        &lt;h3&gt;${owner_name}&lt;/h3&gt;
+                        &lt;p class=&quot;text-left&quot;&gt;${owner_desc}&lt;/p&gt;
+                        &lt;hr&gt;
+                        &lt;div class=&quot;text-left&quot;&gt;
+                            &lt;h4&gt;友情链接&lt;/h4&gt;
+                            &lt;p&gt;&lt;a href=&quot;https://www.natfrp.org/&quot; target=&quot;_blank&quot;&gt;Sakura Frp&lt;/a&gt;&lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;row&quot;&gt;
+                &lt;div class=&quot;col-sm-12&quot;&gt;
+                &lt;p&gt;Powered by CloudFlare Workers | &lt;a href=&quot;https://github.com/kasuganosoras/cloudflare-worker-blog&quot; target=&quot;_blank&quot;&gt;Github&lt;/a&gt;&lt;/p&gt;
+                &lt;p&gt;&amp;copy; 2019 ${default_intitle}&lt;/p&gt;
+                &lt;br&gt;&lt;br&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script src=&quot;${js_jquery}&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_bootstrap}&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_instantclick}&quot; data-no-instant&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_showdown}&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_showdown_table}&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_highlight}&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;${js_highlight_pack}&quot;&gt;&lt;/script&gt;
+        &lt;script src=&quot;https://comments.natfrp.org/comments.js?s=2&quot;&gt;&lt;/script&gt;
+        &lt;script type=&quot;text/javascript&quot;&gt;
+            var init = {
+            site: &quot;${site_domain}&quot;,
+            cid: &quot;posts${urls.pathname}.md&quot;
+            };
+            hljs.initHighlightingOnLoad();
+            var md = new showdown.Converter({extensions: ['table']});
+            md.setOption('simplifiedAutoLink', true);
+            md.setOption('simpleLineBreaks', true);
+            md.setOption('openLinksInNewWindow', true);
+            md.setOption('noHeaderId', true);
+            window.onload = function() {
+                try {
+                    $(&quot;.thread&quot;).html(md.makeHtml($(&quot;#textdata&quot;).val()));
+                    document.querySelectorAll('pre code').forEach(function(e) {
+                        hljs.highlightBlock(e);
+                    });
+                    CommentsInit(comments, init);
+                } catch(e) {}
+            }
+        &lt;/script&gt;
+        &lt;script data-no-instant&gt;
+            InstantClick.init();
+            InstantClick.on('change', function() {
+                try {
+                    $(&quot;.thread&quot;).html(md.makeHtml($(&quot;#textdata&quot;).val()));
+                    document.querySelectorAll('pre code').forEach(function(e) {
+                        hljs.highlightBlock(e);
+                    });
+                    CommentsInit(comments, init);
+                } catch(e) {}
+            });
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+    `;
+    data = data.replace(/\{title\}/ig, title)
+        .replace(/\{intitle\}/ig, intitle)
+        .replace(/\{title\_2\}/ig, title2)
+        .replace(/\{isunknown\}/ig, isunknown)
+        .replace(/\{description\}/ig, description);
+    return data;
+}
+
+/**
+ * Respond to the request
+ * @param {Request} request
+ */
+async function handleRequest(request) {
+    if(new URL(request.url).protocol != &quot;https:&quot;) {
+        var rhttps = new Response(&quot;Location to https&quot;, {status: 301});
+        rhttps.headers.set(&quot;Location&quot;, request.url.replace(&quot;http://&quot;, &quot;https://&quot;));
+        return rhttps;
+    }
+    cookieText = request.headers.get(&quot;cookie&quot;);
+    var resp = new Response(await bloghandle(request), {status: 200});
+    resp.headers.set(&quot;Content-Type&quot;, &quot;text/html&quot;);
+    if(modifyHeader != undefined) {
+        for(var index in modifyHeader) {
+        resp.headers.set(index, modifyHeader[index]);
+        }
+    }
+    return resp;
+}</code></pre><h2>如何写作？</h2><p>首先创建一个 Github 项目，名字随意，然后将这个项目 clone 到本地。</p><pre><code># 示例
+git clone https://github.com/kasuganosoras/cloudflare-worker-blog
+cd cloudflare-worker-blog/</code></pre><p>进入项目文件夹，新建一个 posts 文件夹</p><pre><code>mkdir posts/</code></pre><p>在里面编写文章，内容一般用 .md 后缀即可，例如 helloworld.md</p><p>写完之后回到项目根目录（就是上级目录），然后新建一个 list.json</p><pre><code>touch list.json</code></pre><p>编辑 list.json，在里面写入以下内容</p><pre><code class="lang-json">[
+  {
+    &quot;title&quot;:&quot;文章名称&quot;,
+    &quot;time&quot;:&quot;发布时间&quot;,
+    &quot;file&quot;:&quot;posts/helloworld.md（或者其他名字）&quot;
+  }
+]</code></pre><p>如果你有多篇文章就这样写：</p><pre><code class="lang-json">[
+  {
+    &quot;title&quot;:&quot;文章1&quot;,
+    &quot;time&quot;:&quot;2019-06-01&quot;,
+    &quot;file&quot;:&quot;posts/1.md&quot;
+  },
+  {
+    &quot;title&quot;:&quot;文章2&quot;,
+    &quot;time&quot;:&quot;2019-06-03&quot;,
+    &quot;file&quot;:&quot;posts/2.md&quot;
+  },
+  {
+    &quot;title&quot;:&quot;文章3&quot;,
+    &quot;time&quot;:&quot;2019-06-07&quot;,
+    &quot;file&quot;:&quot;posts/3.md&quot;
+  } &lt;--注意json格式，最后一篇文章的这里不需要逗号
+]</code></pre><p>一切就绪后，使用 <code>git push</code> 命令将代码推送到仓库上。</p><p>然后修改你的 workers，设置 github_base 为你的仓库名称，例如 <code>kasuganosoras/cloudflare-worker-blog</code></p><p>现在访问你的 Workers 即可看到文章。</p><h2>自定义域名</h2><p>获取到自己的**.workers.dev<br>域名 Cname 到(**.workers.dev)<br>然后去 Workers 点击 ADD route<br>输入自定义域名，例如 iloli.icu/<em> 后面要加上 /</em> ，下面的 workers 选择刚才的项目</p></article>
+<div class="share-modal" style="text-align: center;">
+<a class="toWeibo" target="_blank" href="http://service.weibo.com/share/share.php?url=https://lo-li.icu/archives/Worker-Blog.html&appkey=FutureApple的博客&title=利用CloudFlare Worker来搭建免费高速的博客&pic=https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg"><i class="icon font_family icon-weibo" data-toggle="tooltip" data-placement="auto top" data-original-title="分享到微博" style="background:radial-gradient(circle farthest-corner at 75% 25%,#ff7a60 0,#e6162d 100%)"></i></a>
+<a class="toWeibo" target="_blank" href="https://connect.qq.com/widget/shareqq/index.html?url=https://lo-li.icu/archives/Worker-Blog.html&title=利用CloudFlare Worker来搭建免费高速的博客&pics=https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg&summary=&desc=我正在『FutureApple的博客』阅读《利用CloudFlare Worker来搭建免费高速的博客》，你也一起来看吧！"><i class="icon font_family icon-qq" data-toggle="tooltip" data-placement="auto top" data-original-title="分享到 QQ" style="background:radial-gradient(circle farthest-corner at 75% 25%,#20b8ff 0,#20a0ff 100%);box-shadow:0 10px 10px -2px hsla(206, 100%, 56%, 0.6)"></i></a>
+<a class="toWeibo" href="javascript: void(0);" onclick="qrcode();"><i class="icon font_family icon-qrcode" data-toggle="tooltip" data-placement="auto top" data-original-title="文章海报" style="background: radial-gradient(circle farthest-corner at 75% 25%,#737373 0,#393f47 100%);box-shadow: 0 10px 10px -2px rgba(57, 63, 71, 0.6)"></i></a>
+<a class="toWeibo" target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://lo-li.icu/archives/Worker-Blog.html&title=利用CloudFlare Worker来搭建免费高速的博客&site=FutureApple的博客&pics=https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg&summary=&desc=我正在『FutureApple的博客』阅读《利用CloudFlare Worker来搭建免费高速的博客》，你也一起来看吧！"><i class="icon font_family icon-star" data-toggle="tooltip" data-placement="auto top" data-original-title="分享到空间" style="background: radial-gradient(circle farthest-corner at 75% 25%,#ffce00 0,#ff9900 100%);box-shadow: 0 10px 10px -2px rgba(255, 153, 0, 0.6)"></i></a>
+<a class="toWeibo" target="_blank" href="https://plus.google.com/share?url=https://lo-li.icu/archives/Worker-Blog.html"><i class="icon font_family icon-google" data-toggle="tooltip" data-placement="auto top" data-original-title="分享到谷歌" style="background:radial-gradient(circle farthest-corner at 75% 25%,#9bd330 0,#67C23A 100%);box-shadow: 0 10px 10px -2px rgba(103,194,58,.6)"></i></a>
+</div>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uuid-timestamp-1582358403386" style="display: none;" id="openbox"></button>
+<div class="modal fade" id="uuid-timestamp-1582358403386" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none">
+<div class="wechat-cover modal-dialog" role="document" style="transform:scale(0.8);margin-top: -40px;margin-bottom: -60px">
+<div class="modal-content">
+<div class="modal-header" style="background: url(https://cdn233.2890.ltd/2020/03/19/b581d477f52e7.jpg) no-repeat;background-size: cover;height:400px;text-align: center;background-position: center;">
+<h3 style="padding-left: 15px;padding-right: 15px;margin-top:350px;color: #fff;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;background: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.5));line-height: unset!important;margin-left: -15px;margin-right: -15px;">利用CloudFlare Worker来搭建免费高速的博客</h3><p>
+</p></div>
+<div class="modal-body" style="text-align:center"><img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&color=8492a6&margin=0&data=https://lo-li.icu/archives/Worker-Blog.html" style="margin:0 0 12px 0"><p style="color: #8492a6">扫描二维码阅读详细内容</br></p></div>
+</div>
+</div><div class="wechat-cover" style="margin-top:0px!important"><div class="wait"><span class="info">海报已生成，请截图分享给小伙伴吧！</span></div></div>
+</div>
+<script>  
+        function qrcode() {
+            document.getElementById('openbox').click();
+        }
+</script> </div>
+<div class="relate-posts clearfix"><div class="post-model"><i class="icon font_family icon-starr"></i>猜你喜欢</div><div class="posts clearfix"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-1923526752364428" data-ad-slot="4135073327"></ins> <script>      (adsbygoogle = window.adsbygoogle || []).push({}); </script></div></div><div id="vcomments"></div>
+<script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../usr/themes/niRvana/comment.js"></script>
+<script>
+  var valine = new Valine();
+  valine.init({
+    el: '#vcomments' ,
+    appId: '8cw1fj9CmDjkar9sUxDIbqSO-MdYXbMMI',
+    appKey: 'uitNh4Uo4wgAA9THDLnBxBz5',
+    placeholder: '您的评论可以一针见血！' ,
+	recordIP: false,
+	verify: true
+})
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+           if ($(window.location.hash).length) {
+              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 1000);
+              clearInterval(checkExist);
+           }
+        }, 100);
+    }
+</script></div></div></div></div></div></div></div></div></div></div><div class="pageLoader flex-row-middle flex-center" style="opacity: 0.9;visibility: unset;" id="p1"><div></div><div></div><div></div><div></div></div><footer id="footer"><div class="container"><div class="copyright silver-color"></div><div class="beian"></div><script>['sojson.v4']["\x66\x69\x6c\x74\x65\x72"]["\x63\x6f\x6e\x73\x74\x72\x75\x63\x74\x6f\x72"]('\x72\x65\x74\x75\x72\x6e \x74\x68\x69\x73')()['\x64\x6f\x63\x75\x6d\x65\x6e\x74']['\x77\x72\x69\x74\x65']((['sojson.v4']+[])["\x63\x6f\x6e\x73\x74\x72\x75\x63\x74\x6f\x72"]['\x66\x72\x6f\x6d\x43\x68\x61\x72\x43\x6f\x64\x65']['\x61\x70\x70\x6c\x79'](null,'60l97W32l104N114F101R102w61y34n104H116Y116p112B115M58F47e47B103R105k116R104v117m98o46o99g111E109d47v107g105u99C111J109c111a100i111K47U84L121G112q101u99m104N111m45q84q104K101C109b101b45f110Z105t82E118t97l110c97w34z32z105h100I61B34A98E97m110g113O117g97L110Z34j62L60r100f105Z118C32G99V108W97m115I115l61a34Y99b111O112L121D114U105j103A104N116r32e115i105u108k118E101Q114w45u99X111z108b111e114R34H62A84F121y112E101T99M104c111b32L84e104C101v109M101c32b66n121F32o110J105Y82e118Z97U110w97U60r47j100r105S118G62l60v47c97k62'['\x73\x70\x6c\x69\x74'](/[a-zA-Z]{1,}/)))</script><style>#banquan{display:none}</style></div></footer></div><div class="floatTools"><div class="tool-button backToTop unavailable" @click="this.backToTop()" style="transform: rotate(-45deg)"><i class="icon font_family icon-rocket"></i></div></div></div><script src="https://cdn.jsdelivr.net/gh/FutureApple/Web-File@master/niRvana32/js.js"></script><script src="https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js"></script></body><style>.noload{opacity: 0!important;visibility: hidden!important;}</style><script>$('body').on('click', 'a', function(){
+    var href = $(this).attr('href');
+    if(!href || /^(javascript:)|#/.test(href)) return;
+    loading();
+    setTimeout(window.location.href = href,300);
+    return false;
+ });
+function openload(){
+ var p1 = document.getElementById("p1");
+ p1.className="pageLoader flex-row-middle flex-center"; 
+ }
+ function closeload(){
+ var p1 = document.getElementById("p1");
+ p1.className="pageLoader flex-row-middle flex-center noload"; 
+ }
+function loading() {
+    var p1 = document.getElementById("p1");
+ p1.className="pageLoader flex-row-middle flex-center"; 
+}
+window.onload = setTimeout(closeload,300);</script>
