@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+xmlns:thr="http://purl.org/syndication/thread/1.0"
+xml:lang="zh-CN"
+xml:base="https://lo-li.icu/category/Notes/"
+>
+<title type="text">FutureApple的博客 - 笔记</title>
+<subtitle type="text"></subtitle>
+<updated>2020-01-14T21:14:00+08:00</updated>
+<generator uri="http://typecho.org/" version="1.2/18.1.29">Typecho</generator>
+<link rel="alternate" type="text/html" href="https://lo-li.icu/category/Notes/" />
+<id>https://lo-li.icu/feed/atom/category/Notes/</id>
+<link rel="self" type="application/atom+xml" href="https://lo-li.icu/feed/atom/category/Notes/" />
+<entry>
+<title type="html"><![CDATA[Typecho博客主页静态化]]></title>
+<link rel="alternate" type="text/html" href="https://lo-li.icu/archives/17.html" />
+<id>https://lo-li.icu/archives/17.html</id>
+<updated>2020-01-14T21:14:00+08:00</updated>
+<published>2020-01-14T21:14:00+08:00</published>
+<author>
+    <name>FutureApple</name>
+    <uri>https://lo-li.icu</uri>
+</author>
+<summary type="html"><![CDATA[Typecho虽然在文章页因为评论不能做静态页面，但是在首页可以，静态不仅可以节省服务器的资源，还可以加速访问，以下是我的静态化代码。&amp;lt;?phpini_set( 'date.timezon...]]></summary>
+<content type="html" xml:base="https://lo-li.icu/archives/17.html" xml:lang="zh-CN"><![CDATA[
+<p>Typecho虽然在文章页因为评论不能做静态页面，但是在首页可以，静态不仅可以节省服务器的资源，还可以加速访问，以下是我的静态化代码。</p><pre><code>&lt;?php
+
+ini_set( 'date.timezone', 'PRC' );
+ 
+/* 缓存过期时间 单位：秒 */
+$expire = 86400;
+/* 主动刷新密码  格式：http://test.com/f5.php?password=123456 */
+$password = '123456';
+$file_time = @filemtime( 'index.html' );
+time() - $file_time &gt; $expire &amp;&amp; create_index();
+isset( $_GET['password'] ) &amp;&amp; $_GET['password'] == $password &amp;&amp; create_index();
+ 
+/**
+ * 生成 index.html
+ */
+function create_index()
+{
+    ob_start();
+    include( 'index.php' );
+    $content = ob_get_contents();
+    $content .= &quot;\n&lt;!-- Create time: &quot; . date( 'Y-m-d H:i:s' ) . &quot; --&gt;&quot;;
+    /* 调用更新 */
+    $content .= &quot;\n&lt;script language=javascript src='f5.php'&gt;&lt;/script&gt;&quot;;
+    ob_clean();
+    $res = file_put_contents( 'index.html', $content );
+    if ( $res !== false )
+    {
+        die( 'Create successful' );
+    }
+    else
+    {
+        die( 'Create error' );
+    }
+}</code></pre><pre><code>记住，如果你的站点又搜索功能，请将搜索功能的修改action地址为/search</code></pre><pre><code>&lt;div class=&quot;site-search col-3 kit-hidden-tb&quot;&gt;
+               &lt;form id=&quot;search&quot; method=&quot;post&quot; action=&quot;/search&quot; role=&quot;search&quot;&gt;
+                   &lt;label for=&quot;s&quot; class=&quot;sr-only&quot;&gt;&lt;?php _e('搜索关键字'); ?&gt;&lt;/label&gt;
+                   &lt;input type=&quot;text&quot; name=&quot;s&quot; class=&quot;text&quot; placeholder=&quot;&lt;?php _e('输入关键字搜索'); ?&gt;&quot; /&gt;
+                   &lt;button type=&quot;submit&quot; class=&quot;submit&quot;&gt;&lt;?php _e('搜索'); ?&gt;&lt;/button&gt;
+               &lt;/form&gt;
+           &lt;/div&gt;</code></pre><pre><code>如果你的主页和我一样有一个天数统计，可以设置一个定时刷新，每天刷新一次，这个功能可以用python实现.
+import requests
+import time
+
+while True:
+    requests.get(&quot;https://youurl/f5?password=youpssword&quot;)
+    time.sleep(86400)
+
+</code></pre>
+]]></content>
+<link rel="replies" type="text/html" href="https://lo-li.icu/archives/17.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="https://lo-li.icu/feed/atom/archives/17.html" thr:count="0"/>
+</entry>
+<entry>
+<title type="html"><![CDATA[Vim学习笔记]]></title>
+<link rel="alternate" type="text/html" href="https://lo-li.icu/archives/5.html" />
+<id>https://lo-li.icu/archives/5.html</id>
+<updated>2019-11-30T20:22:00+08:00</updated>
+<published>2019-11-30T20:22:00+08:00</published>
+<author>
+    <name>FutureApple</name>
+    <uri>https://lo-li.icu</uri>
+</author>
+<summary type="html"><![CDATA[注意:^是Ctrl注意:要控制窗口，需要先按下Ctrl+w作用命令横向增加分屏:sp纵向增加分屏:vsp切换到下一个窗口w互换窗口f关闭当前窗口，但不能关闭最后一个窗口c退出当前窗口q关闭其他窗...]]></summary>
+<content type="html" xml:base="https://lo-li.icu/archives/5.html" xml:lang="zh-CN"><![CDATA[
+<h4>注意:<strong><code>^</code></strong>是<strong><code>Ctrl</code></strong></h4><h4>注意:要控制窗口，需要先按下<code>Ctrl</code>+w</h4><table><thead><tr><th>作用</th><th>命令</th></tr></thead><tbody><tr><td>横向增加分屏</td><td>:sp</td></tr><tr><td>纵向增加分屏</td><td>:vsp</td></tr><tr><td>切换到下一个窗口</td><td>w</td></tr><tr><td>互换窗口</td><td>f</td></tr><tr><td>关闭当前窗口，但不能关闭最后一个窗口</td><td>c</td></tr><tr><td>退出当前窗口</td><td>q</td></tr><tr><td>关闭其他窗口</td><td>o</td></tr><tr><td>打开内置文件浏览器</td><td>:e</td></tr><tr><td>打开当前目录下的文件</td><td>:e + 文件名</td></tr><tr><td>新建文件</td><td>:n + 文件名</td></tr><tr><td>另存为</td><td>:w + 文件名</td></tr><tr><td>保存并退出</td><td>:wq</td></tr><tr><td>保存并退出</td><td>:x</td></tr><tr><td>强制退出</td><td>:q！</td></tr><tr><td>保存</td><td>:w</td></tr><tr><td>进入编辑模式</td><td>i</td></tr><tr><td>进入可视模式（选择模式）</td><td>v</td></tr><tr><td>进入可视行模式</td><td>V</td></tr><tr><td>进入可视块模式</td><td>^V</td></tr><tr><td>进入末行模式</td><td>:</td></tr><tr><td>进入末行模式</td><td>ESC</td></tr><tr><td>撤回刚刚的修改</td><td>u</td></tr><tr><td>复制</td><td>y</td></tr><tr><td>复制一行</td><td>yy</td></tr><tr><td>粘贴</td><td>p</td></tr><tr><td>替换当前字符</td><td>r</td></tr><tr><td>替换当前光标后的字符</td><td>R</td></tr><tr><td>左</td><td>h</td></tr><tr><td>下</td><td>j</td></tr><tr><td>上</td><td>k</td></tr><tr><td>右</td><td>l</td></tr><tr><td>移动到顶部</td><td>gg</td></tr><tr><td>移动到末尾</td><td>G</td></tr><tr><td>移动到对应行数</td><td>数字 + gg &amp; 数字 + G</td></tr><tr><td>撤回刚刚撤回的修改</td><td>^r</td></tr><tr><td>向上翻页</td><td>^b</td></tr><tr><td>向下翻页</td><td>^f</td></tr><tr><td>移动到屏幕顶部</td><td>H</td></tr><tr><td>移动到屏幕中间</td><td>M</td></tr><tr><td>移动到屏幕底部</td><td>L</td></tr><tr><td>切换到上一段</td><td>{</td></tr><tr><td>切换到下一段</td><td>}</td></tr><tr><td>添加标记,名称为字母</td><td>mx + 字母</td></tr><tr><td>返回到标记字母得到位置</td><td>`+ 字母</td></tr></tbody></table><h1>打开方式</h1><pre><code># 打开后定位到制定行
+$ vim + 文件名 + 行数`&lt;/pre&gt;&lt;pre&gt;`# 定位到上一次退出位置
+$ vim + 文件名 +</code></pre><p></article></p>
+]]></content>
+<link rel="replies" type="text/html" href="https://lo-li.icu/archives/5.html#comments" thr:count="0" />
+<link rel="replies" type="application/atom+xml" href="https://lo-li.icu/feed/atom/archives/5.html" thr:count="0"/>
+</entry>
+</feed>

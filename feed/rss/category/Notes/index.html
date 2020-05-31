@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="https://lo-li.icu/feed/rss/category/Notes/">
+<title>FutureApple的博客 - 笔记</title>
+<link>https://lo-li.icu/category/Notes/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="https://lo-li.icu/archives/17.html"/>
+<rdf:li resource="https://lo-li.icu/archives/5.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="https://lo-li.icu/archives/17.html">
+<title>Typecho博客主页静态化</title>
+<link>https://lo-li.icu/archives/17.html</link>
+<dc:date>2020-01-14T21:14:00+08:00</dc:date>
+<description>Typecho虽然在文章页因为评论不能做静态页面，但是在首页可以，静态不仅可以节省服务器的资源，还可以加速访问，以下是我的静态化代码。&lt;?php
+
+ini_set( 'date.timezone', 'PRC' );
+ 
+/* 缓存过期时间 单位：秒 */
+$expire = 86400;
+/* 主动刷新密码  格式：http://test.com/f5.php?password=123456 */
+$password = '123456';
+$file_time = @filemtime( 'index.html' );
+time() - $file_time &gt; $expire &amp;&amp; create_index();
+isset( $_GET['password'] ) &amp;&amp; $_GET['password'] == $password &amp;&amp; create_index();
+ 
+/**
+ * 生成 index.html
+ */
+function create_index()
+{
+    ob_start();
+    include( 'index.php' );
+    $content = ob_get_contents();
+    $content .= &quot;\n&lt;!-- Create time: &quot; . date( 'Y-m-d H:i:s' ) . &quot; --&gt;&quot;;
+    /* 调用更新 */
+    $content .= &quot;\n&lt;script language=javascript src='f5.php'&gt;&lt;/script&gt;&quot;;
+    ob_clean();
+    $res = file_put_contents( 'index.html', $content );
+    if ( $res !== false )
+    {
+        die( 'Create successful' );
+    }
+    else
+    {
+        die( 'Create error' );
+    }
+}记住，如果你的站点又搜索功能，请将搜索功能的修改action地址为/search&lt;div class=&quot;site-search col-3 kit-hidden-tb&quot;&gt;
+               &lt;form id=&quot;search&quot; method=&quot;post&quot; action=&quot;/search&quot; role=&quot;search&quot;&gt;
+                   &lt;label for=&quot;s&quot; class=&quot;sr-only&quot;&gt;&lt;?php _e('搜索关键字'); ?&gt;&lt;/label&gt;
+                   &lt;input type=&quot;text&quot; name=&quot;s&quot; class=&quot;text&quot; placeholder=&quot;&lt;?php _e('输入关键字搜索'); ?&gt;&quot; /&gt;
+                   &lt;button type=&quot;submit&quot; class=&quot;submit&quot;&gt;&lt;?php _e('搜索'); ?&gt;&lt;/button&gt;
+               &lt;/form&gt;
+           &lt;/div&gt;如果你的主页和我一样有一个天数统计，可以设置一个定时刷新，每天刷新一次，这个功能可以用python实现.
+import requests
+import time
+
+while True:
+    requests.get(&quot;https://youurl/f5?password=youpssword&quot;)
+    time.sleep(86400)
+
+</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/5.html">
+<title>Vim学习笔记</title>
+<link>https://lo-li.icu/archives/5.html</link>
+<dc:date>2019-11-30T20:22:00+08:00</dc:date>
+<description>注意:^是Ctrl注意:要控制窗口，需要先按下Ctrl+w作用命令横向增加分屏:sp纵向增加分屏:vsp切换到下一个窗口w互换窗口f关闭当前窗口，但不能关闭最后一个窗口c退出当前窗口q关闭其他窗口o打开内置文件浏览器:e打开当前目录下的文件:e + 文件名新建文件:n + 文件名另存为:w + 文件名保存并退出:wq保存并退出:x强制退出:q！保存:w进入编辑模式i进入可视模式（选择模式）v进入可视行模式V进入可视块模式^V进入末行模式:进入末行模式ESC撤回刚刚的修改u复制y复制一行yy粘贴p替换当前字符r替换当前光标后的字符R左h下j上k右l移动到顶部gg移动到末尾G移动到对应行数数字 + gg &amp; 数字 + G撤回刚刚撤回的修改^r向上翻页^b向下翻页^f移动到屏幕顶部H移动到屏幕中间M移动到屏幕底部L切换到上一段{切换到下一段}添加标记,名称为字母mx + 字母返回到标记字母得到位置`+ 字母打开方式# 打开后定位到制定行
+$ vim + 文件名 + 行数`&lt;/pre&gt;&lt;pre&gt;`# 定位到上一次退出位置
+$ vim + 文件名 +</description>
+</item>
+</rdf:RDF>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="renderer" content="webkit">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>Vim学习笔记 - FutureApple的博客</title>
+    <title>「杂项」分类下的文章 - FutureApple的博客</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css" >
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.4.1/css/all.min.css" >
@@ -19,180 +19,40 @@
 <link rel="stylesheet" href="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/css/progressbar.css" >
 <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
 <link rel="stylesheet" href="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/css/style.css" >
-<meta name="description" content="注意:^是Ctrl注意:要控制窗口，需要先按下Ctrl+w作用命令横向增加分屏:sp纵向增加分屏:vsp切换到下一个窗口w互换窗口f关闭当前窗口，但不能关闭最后一个窗口c退出当前窗口q关闭其他窗..." />
+<meta name="keywords" content="杂项" />
 <meta name="generator" content="Typecho 1.2/18.1.29" />
 <meta name="template" content="typecho-theme-icarus" />
-<link rel="pingback" href="../action/xmlrpc" />
-<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../action/xmlrpc?rsd" />
-<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../action/xmlrpc?wlw" />
-<link rel="alternate" type="application/rss+xml" title="Vim学习笔记 &raquo; FutureApple的博客 &raquo; RSS 2.0" href="../feed/archives/5.html" />
-<link rel="alternate" type="application/rdf+xml" title="Vim学习笔记 &raquo; FutureApple的博客 &raquo; RSS 1.0" href="../feed/rss/archives/5.html" />
-<link rel="alternate" type="application/atom+xml" title="Vim学习笔记 &raquo; FutureApple的博客 &raquo; ATOM 1.0" href="../feed/atom/archives/5.html" />
-<script type="text/javascript">
-(function () {
-    window.TypechoComment = {
-        dom : function (id) {
-            return document.getElementById(id);
-        },
-    
-        create : function (tag, attr) {
-            var el = document.createElement(tag);
-        
-            for (var key in attr) {
-                el.setAttribute(key, attr[key]);
-            }
-        
-            return el;
-        },
-
-        reply : function (cid, coid) {
-            var comment = this.dom(cid), parent = comment.parentNode,
-                response = this.dom('respond-post-7'), input = this.dom('comment-parent'),
-                form = 'form' == response.tagName ? response : response.getElementsByTagName('form')[0],
-                textarea = response.getElementsByTagName('textarea')[0];
-
-            if (null == input) {
-                input = this.create('input', {
-                    'type' : 'hidden',
-                    'name' : 'parent',
-                    'id'   : 'comment-parent'
-                });
-
-                form.appendChild(input);
-            }
-
-            input.setAttribute('value', coid);
-
-            if (null == this.dom('comment-form-place-holder')) {
-                var holder = this.create('div', {
-                    'id' : 'comment-form-place-holder'
-                });
-
-                response.parentNode.insertBefore(holder, response);
-            }
-
-            comment.appendChild(response);
-            this.dom('cancel-comment-reply-link').style.display = '';
-
-            if (null != textarea && 'text' == textarea.name) {
-                textarea.focus();
-            }
-
-            return false;
-        },
-
-        cancelReply : function () {
-            var response = this.dom('respond-post-7'),
-            holder = this.dom('comment-form-place-holder'), input = this.dom('comment-parent');
-
-            if (null != input) {
-                input.parentNode.removeChild(input);
-            }
-
-            if (null == holder) {
-                return true;
-            }
-
-            this.dom('cancel-comment-reply-link').style.display = 'none';
-            holder.parentNode.insertBefore(response, holder);
-            return false;
-        }
-    };
-})();
-</script>
-<script type="text/javascript">
-(function () {
-    var event = document.addEventListener ? {
-        add: 'addEventListener',
-        triggers: ['scroll', 'mousemove', 'keyup', 'touchstart'],
-        load: 'DOMContentLoaded'
-    } : {
-        add: 'attachEvent',
-        triggers: ['onfocus', 'onmousemove', 'onkeyup', 'ontouchstart'],
-        load: 'onload'
-    }, added = false;
-
-    document[event.add](event.load, function () {
-        var r = document.getElementById('respond-post-7'),
-            input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = '_';
-        input.value = (function () {
-    var _nJz = /* 'vr6'//'vr6' */''+'4d'//'W'
-+//'W'
-'W'+'ba'//'r'
-+//'w'
-'b9'+/* 'qj'//'qj' */''+'49b'//'T'
-+'6'//'p'
-+//'H'
-'b'+//'B'
-'93e'+'302'//'Bg'
-+//'yWR'
-'484'+//'a'
-'12'+'0'//'1V'
-+'4'//'r'
-+'f8'//'et'
-+'ffb'//'2d'
-+'f9'//'gkW'
-+//'Br'
-'Br'+'sv3'//'sv3'
-+'8'//'d9u'
-, _jXY = [[2,3],[31,33],[31,34]];
-    
-    for (var i = 0; i < _jXY.length; i ++) {
-        _nJz = _nJz.substring(0, _jXY[i][0]) + _nJz.substring(_jXY[i][1]);
-    }
-
-    return _nJz;
-})();
-
-        if (null != r) {
-            var forms = r.getElementsByTagName('form');
-            if (forms.length > 0) {
-                function append() {
-                    if (!added) {
-                        forms[0].appendChild(input);
-                        added = true;
-                    }
-                }
-            
-                for (var i = 0; i < event.triggers.length; i ++) {
-                    var trigger = event.triggers[i];
-                    document[event.add](trigger, append);
-                    window[event.add](trigger, append);
-                }
-            }
-        }
-    });
-})();
-</script><link rel="icon" href="https://mirror.fa-dream.top/cdn233.2890.ltd/givenpic/2020/05/24/818acf5f492ff.png" />
+<link rel="pingback" href="../../action/xmlrpc" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="../../action/xmlrpc?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="../../action/xmlrpc?wlw" />
+<link rel="alternate" type="application/rss+xml" title="杂项 &raquo; FutureApple的博客 &raquo; RSS 2.0" href="../../feed/category/miscellaneous/index.html" />
+<link rel="alternate" type="application/rdf+xml" title="杂项 &raquo; FutureApple的博客 &raquo; RSS 1.0" href="../../feed/rss/category/miscellaneous/index.html" />
+<link rel="alternate" type="application/atom+xml" title="杂项 &raquo; FutureApple的博客 &raquo; ATOM 1.0" href="../../feed/atom/category/miscellaneous/index.html" />
+<link rel="icon" href="https://mirror.fa-dream.top/cdn233.2890.ltd/givenpic/2020/05/24/818acf5f492ff.png" />
 <link rel="stylesheet" href="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/css/search.css" >
 </head>
 <body class="is-3-column">
     <nav class="navbar navbar-main">
     <div class="container">
         <div class="navbar-brand is-flex-center">
-            <a class="navbar-item navbar-logo" href="../index.html">
+            <a class="navbar-item navbar-logo" href="../../index.html">
                             FutureApple的博客                        </a>
         </div>
         <div class="navbar-menu">
                         <div class="navbar-start">
                                 <a class="navbar-item"
-                href="../index.html#">首页</a>
+                href="../../index.html#">首页</a>
                                 <a class="navbar-item"
-                href="../archives.html">归档</a>
+                href="../../archives.html">归档</a>
                                 <a class="navbar-item"
-                href="../guestbook.html">留言</a>
+                href="../../guestbook.html">留言</a>
                                 <a class="navbar-item"
-                href="../categories.html">分类</a>
+                href="../../categories.html">分类</a>
                                 <a class="navbar-item"
-                href="../about.html">关于</a>
+                href="../../about.html">关于</a>
                             </div>
                         <div class="navbar-end">
-                                        <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
-                    <i class="fas fa-list-ul"></i>
-                </a>
-                                        <a class="navbar-item search" title="搜索" href="javascript:;">
+                                                    <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
                 </a>
                         </div>
@@ -205,39 +65,109 @@
                 <main class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
     
 <div class="card">
-        <div class="card-content article article-single">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+<li><a href="../../categories.html">分类</a></li>
+<li class="is-active"><a href="index.html" aria-current="page">杂项</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+<div class="card">
+            <div class="card-content article article-item">
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-11-30T20:22:00+08:00">2019-11-30</time>
+                <time class="level-item has-text-grey" datetime="2020-02-12T21:26:00+08:00">2020-02-12</time>
                     <div class="level-item">
-        <a class="has-link-grey" href="../category/Notes/index.html">笔记</a>    </div>
+        <a class="has-link-grey" href="index.html">杂项</a>    </div>
                     </div>
         </div>
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            Vim学习笔记        </h1>
+            <a class="has-link-black-ter" href="../../archives/19.html">TinyPng拯救你的图片和存储空间</a>
+        </h1>
         <div class="content">
-        <h4 id="1-1-1-注意:^是Ctrl">注意:<strong><code>^</code></strong>是<strong><code>Ctrl</code></strong></h4><h4 id="1-1-2-注意:要控制窗口，需要先按下Ctrl+w">注意:要控制窗口，需要先按下<code>Ctrl</code>+w</h4><table><thead><tr><th>作用</th><th>命令</th></tr></thead><tbody><tr><td>横向增加分屏</td><td>:sp</td></tr><tr><td>纵向增加分屏</td><td>:vsp</td></tr><tr><td>切换到下一个窗口</td><td>w</td></tr><tr><td>互换窗口</td><td>f</td></tr><tr><td>关闭当前窗口，但不能关闭最后一个窗口</td><td>c</td></tr><tr><td>退出当前窗口</td><td>q</td></tr><tr><td>关闭其他窗口</td><td>o</td></tr><tr><td>打开内置文件浏览器</td><td>:e</td></tr><tr><td>打开当前目录下的文件</td><td>:e + 文件名</td></tr><tr><td>新建文件</td><td>:n + 文件名</td></tr><tr><td>另存为</td><td>:w + 文件名</td></tr><tr><td>保存并退出</td><td>:wq</td></tr><tr><td>保存并退出</td><td>:x</td></tr><tr><td>强制退出</td><td>:q！</td></tr><tr><td>保存</td><td>:w</td></tr><tr><td>进入编辑模式</td><td>i</td></tr><tr><td>进入可视模式（选择模式）</td><td>v</td></tr><tr><td>进入可视行模式</td><td>V</td></tr><tr><td>进入可视块模式</td><td>^V</td></tr><tr><td>进入末行模式</td><td>:</td></tr><tr><td>进入末行模式</td><td>ESC</td></tr><tr><td>撤回刚刚的修改</td><td>u</td></tr><tr><td>复制</td><td>y</td></tr><tr><td>复制一行</td><td>yy</td></tr><tr><td>粘贴</td><td>p</td></tr><tr><td>替换当前字符</td><td>r</td></tr><tr><td>替换当前光标后的字符</td><td>R</td></tr><tr><td>左</td><td>h</td></tr><tr><td>下</td><td>j</td></tr><tr><td>上</td><td>k</td></tr><tr><td>右</td><td>l</td></tr><tr><td>移动到顶部</td><td>gg</td></tr><tr><td>移动到末尾</td><td>G</td></tr><tr><td>移动到对应行数</td><td>数字 + gg &amp; 数字 + G</td></tr><tr><td>撤回刚刚撤回的修改</td><td>^r</td></tr><tr><td>向上翻页</td><td>^b</td></tr><tr><td>向下翻页</td><td>^f</td></tr><tr><td>移动到屏幕顶部</td><td>H</td></tr><tr><td>移动到屏幕中间</td><td>M</td></tr><tr><td>移动到屏幕底部</td><td>L</td></tr><tr><td>切换到上一段</td><td>{</td></tr><tr><td>切换到下一段</td><td>}</td></tr><tr><td>添加标记,名称为字母</td><td>mx + 字母</td></tr><tr><td>返回到标记字母得到位置</td><td>`+ 字母</td></tr></tbody></table><h1>打开方式</h1><pre><code># 打开后定位到制定行
-$ vim + 文件名 + 行数`&lt;/pre&gt;&lt;pre&gt;`# 定位到上一次退出位置
-$ vim + 文件名 +</code></pre><p></article></p>        </div>
+            总所周知，图片一直是站长们的痛苦，过大的图片会是你的网站变得臃肿，拖慢你的网站速度，那有没有办法解决这个问题呢？当然有，TinyPng！        </div>
+                <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="../../archives/19.html">阅读全文</a>
+                </div>
             </div>
-</div>
+        </div>
+    </div>
+    </div>
 <div class="card">
-    <div class="card-content comment-container">
-        <!--Leancloud 操作库:-->
-<script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<!--Valine 的核心代码库:-->
-<script src='https://unpkg.com/valine/dist/Valine.min.js'></script>
-<div class="comment"></div>
-<script>
-  new Valine({
-    el:'.comment', // Valine 的初始化挂载器
-    app_id:'8cw1fj9CmDjkar9sUxDIbqSO-MdYXbMMI', // 这里填写上面得到的APP ID
-    app_key:'uitNh4Uo4wgAA9THDLnBxBz5', // 这里填写上面得到的APP KEY
-    placeholder:'ヾﾉ≧∀≦)o 来啊！快活啊！ ', // 留言框占位文字
-    verify:true, // 验证码
-  });
-</script>    </div>
-</div>
+            <div class="card-content article article-item">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-14T21:14:00+08:00">2020-01-14</time>
+                    <div class="level-item">
+        <a class="has-link-grey" href="index.html">杂项</a>    </div>
+                    </div>
+        </div>
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            <a class="has-link-black-ter" href="../../archives/17.html">Typecho博客主页静态化</a>
+        </h1>
+        <div class="content">
+            Typecho虽然在文章页因为评论不能做静态页面，但是在首页可以，静态不仅可以节省服务器的资源，还可以加速访问，以下是我的静态化代码。&lt;?php
+
+ini_set( 'date.timez...        </div>
+                <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="../../archives/17.html">阅读全文</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="card">
+            <div class="card-content article article-item">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-13T12:04:00+08:00">2020-01-13</time>
+                    <div class="level-item">
+        <a class="has-link-grey" href="index.html">杂项</a>    </div>
+                    </div>
+        </div>
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            <a class="has-link-black-ter" href="../../archives/Worker-Blog.html">利用CloudFlare Worker来搭建免费高速的博客</a>
+        </h1>
+        <div class="content">
+            注意：本篇文章部份内容引用了2890和kasuganosoras的内容是什么?Cloudflare workers + Github 实现的动态博客系统，使用边缘计算，无需服务器，Workers...        </div>
+                <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="../../archives/Worker-Blog.html">阅读全文</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+<div class="card">
+            <div class="card-content article article-item">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-01-01T11:53:00+08:00">2020-01-01</time>
+                    <div class="level-item">
+        <a class="has-link-grey" href="index.html">杂项</a>    </div>
+                    </div>
+        </div>
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            <a class="has-link-black-ter" href="../../archives/15.html">自建免费高速的静态资源CDN</a>
+        </h1>
+        <div class="content">
+            文件存储在哪儿？我采用了Github作为文件存储的位置，网页版最大上传20MB，git最大100MB想要更大需要下载一个软件，但是暂时够用。上面这张图片就是存在我搭建的CDN里的。速度慢，怎么解...        </div>
+                <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="../../archives/15.html">阅读全文</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
                 </main>
                 <aside class="column is-4-tablet is-4-desktop is-3-widescreen has-order-1 column-left">
 <div class="card widget">
@@ -294,7 +224,7 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
                 title="GitHub" href="https://github.com/FutureApple">
                                 <i class="fab fa-github"></i>
                             </a>
-                        <a class="level-item button is-white is-marginless" target="_blank" title="E-Mail" href="../cdn-cgi/l/email-protection#1274733f766077737f52747d6a7f737b7e3c717d7f">
+                        <a class="level-item button is-white is-marginless" target="_blank" title="E-Mail" href="../../cdn-cgi/l/email-protection#35535418514750545875535a4d58545c591b565a58">
                                 <i class="social fas fa-envelope flat-btn waves-effect waves-button"></i>
                             </a>
                         <a class="level-item button is-white is-marginless" target="_blank"
@@ -367,42 +297,12 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
 </div>
 </aside>
 <aside class="column is-4-tablet is-4-desktop is-3-widescreen has-order-3 column-right">
-<div class="card widget" id="toc">
-    <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                文章目录            </h3>
-<ul class="menu-list">
-<li>
-<ul class="menu-list">
-<li>
-<ul class="menu-list">
-<li>
-    <a class="is-flex" href="5.html#1-1-1-注意:^是Ctrl">
-        <span class="has-mr-6">1.</span>
-        <span>注意:^是Ctrl</span>
-    </a>
-</li>
-<li>
-    <a class="is-flex" href="5.html#1-1-2-注意:要控制窗口，需要先按下Ctrl+w">
-        <span class="has-mr-6">2.</span>
-        <span>注意:要控制窗口，需要先按下Ctrl+w</span>
-    </a>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-        </div>
-    </div>
-</div>
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
             最新文章        </h3>
 <div class="media">
-        <a href="19.html" class="media-left">
+        <a href="../../archives/19.html" class="media-left">
         <p class="image is-64x64">
             <img class="thumbnail" src="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/img/thumbnail.svg" alt="TinyPng拯救你的图片和存储空间">
         </p>
@@ -410,14 +310,14 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="media-content">
         <div class="content">
             <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-12T21:26:00+08:00">2020-02-12</time></div>
-            <a href="19.html" class="has-link-black-ter is-size-6">TinyPng拯救你的图片和存储空间</a>
+            <a href="../../archives/19.html" class="has-link-black-ter is-size-6">TinyPng拯救你的图片和存储空间</a>
                         <p class="is-size-7 is-uppercase">
-            <a class="has-link-grey" href="../category/miscellaneous/index.html">杂项</a>            </p>
+            <a class="has-link-grey" href="index.html">杂项</a>            </p>
                     </div>
     </div>
 </div>
 <div class="media">
-        <a href="17.html" class="media-left">
+        <a href="../../archives/17.html" class="media-left">
         <p class="image is-64x64">
             <img class="thumbnail" src="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/img/thumbnail.svg" alt="Typecho博客主页静态化">
         </p>
@@ -425,14 +325,14 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="media-content">
         <div class="content">
             <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-14T21:14:00+08:00">2020-01-14</time></div>
-            <a href="17.html" class="has-link-black-ter is-size-6">Typecho博客主页静态化</a>
+            <a href="../../archives/17.html" class="has-link-black-ter is-size-6">Typecho博客主页静态化</a>
                         <p class="is-size-7 is-uppercase">
-            <a class="has-link-grey" href="../category/miscellaneous/index.html">杂项</a>            </p>
+            <a class="has-link-grey" href="index.html">杂项</a>            </p>
                     </div>
     </div>
 </div>
 <div class="media">
-        <a href="Worker-Blog.html" class="media-left">
+        <a href="../../archives/Worker-Blog.html" class="media-left">
         <p class="image is-64x64">
             <img class="thumbnail" src="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/img/thumbnail.svg" alt="利用CloudFlare Worker来搭建免费高速的博客">
         </p>
@@ -440,14 +340,14 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="media-content">
         <div class="content">
             <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-13T12:04:00+08:00">2020-01-13</time></div>
-            <a href="Worker-Blog.html" class="has-link-black-ter is-size-6">利用CloudFlare Worker来搭建免费高速的博客</a>
+            <a href="../../archives/Worker-Blog.html" class="has-link-black-ter is-size-6">利用CloudFlare Worker来搭建免费高速的博客</a>
                         <p class="is-size-7 is-uppercase">
-            <a class="has-link-grey" href="../category/miscellaneous/index.html">杂项</a>            </p>
+            <a class="has-link-grey" href="index.html">杂项</a>            </p>
                     </div>
     </div>
 </div>
 <div class="media">
-        <a href="15.html" class="media-left">
+        <a href="../../archives/15.html" class="media-left">
         <p class="image is-64x64">
             <img class="thumbnail" src="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/img/thumbnail.svg" alt="自建免费高速的静态资源CDN">
         </p>
@@ -455,14 +355,14 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="media-content">
         <div class="content">
             <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-01T11:53:00+08:00">2020-01-01</time></div>
-            <a href="15.html" class="has-link-black-ter is-size-6">自建免费高速的静态资源CDN</a>
+            <a href="../../archives/15.html" class="has-link-black-ter is-size-6">自建免费高速的静态资源CDN</a>
                         <p class="is-size-7 is-uppercase">
-            <a class="has-link-grey" href="../category/miscellaneous/index.html">杂项</a>            </p>
+            <a class="has-link-grey" href="index.html">杂项</a>            </p>
                     </div>
     </div>
 </div>
 <div class="media">
-        <a href="5.html" class="media-left">
+        <a href="../../archives/5.html" class="media-left">
         <p class="image is-64x64">
             <img class="thumbnail" src="https://lo-li.icu/usr/themes/typecho-theme-icarus/assets/img/thumbnail.svg" alt="Vim学习笔记">
         </p>
@@ -470,9 +370,9 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="media-content">
         <div class="content">
             <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-30T20:22:00+08:00">2019-11-30</time></div>
-            <a href="5.html" class="has-link-black-ter is-size-6">Vim学习笔记</a>
+            <a href="../../archives/5.html" class="has-link-black-ter is-size-6">Vim学习笔记</a>
                         <p class="is-size-7 is-uppercase">
-            <a class="has-link-grey" href="../category/Notes/index.html">笔记</a>            </p>
+            <a class="has-link-grey" href="../Notes/index.html">笔记</a>            </p>
                     </div>
     </div>
 </div>
@@ -484,7 +384,7 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
                     <h3 class="menu-label">
                 分类            </h3>
         <ul class="menu-list"><li>
-    <a class="level is-marginless" href="../category/miscellaneous/index.html">
+    <a class="level is-marginless" href="index.html">
         <span class="level-start">
             <span class="level-item">杂项</span>
         </span>
@@ -494,7 +394,7 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
     </a>
 </li>
 <li>
-    <a class="level is-marginless" href="../category/Development/index.html">
+    <a class="level is-marginless" href="../Development/index.html">
         <span class="level-start">
             <span class="level-item">开发</span>
         </span>
@@ -504,7 +404,7 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
     </a>
 </li>
 <li>
-    <a class="level is-marginless" href="../category/Notes/index.html">
+    <a class="level is-marginless" href="../Notes/index.html">
         <span class="level-start">
             <span class="level-item">笔记</span>
         </span>
@@ -525,7 +425,7 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
         <div class="container">
             <div class="level">
                 <div class="level-start has-text-centered-mobile">
-                    <a class="footer-logo is-block has-mb-6" href="../index.html">
+                    <a class="footer-logo is-block has-mb-6" href="../../index.html">
                                             FutureApple的博客                                        </a>
                     <p class="is-size-7">
                     &copy; 2019&nbsp;-&nbsp;2020 FutureApple&nbsp;
@@ -541,14 +441,14 @@ $ vim + 文件名 +</code></pre><p></article></p>        </div>
 <div class="searchbox">
     <div class="searchbox-container">
         <div class="searchbox-input-wrapper">
-            <form class="search-form" method="post" action="../index.html" role="search">
+            <form class="search-form" method="post" action="../../index.html" role="search">
                 <input name="s" type="text" class="searchbox-input" placeholder="输入关键字搜索" />
                 <span class="searchbox-close searchbox-selectable"><i class="fa fa-times-circle"></i></span>
             </form>
         </div>
     </div>
 </div>
-<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 document.addEventListener('DOMContentLoaded', function () {
     (function ($) {
         $('.navbar-main .search').click(function () {

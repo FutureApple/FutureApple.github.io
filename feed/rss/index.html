@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="https://lo-li.icu/feed/rss/">
+<title>FutureApple的博客</title>
+<link>https://lo-li.icu/</link>
+<description>一只被ACG耽误的憨憨程序员，且本人擅长Ai、Fw、Fl、Ae、Pr、ld、Ps等软件的安装与卸载，精通Bash、JavaScript、PHP、C、C++、C#、Java、Go、Pascal、Lua、Python、 Objective-C等单词的拼写，熟悉Windows、Linux、Mac OS、iOS、Android等系统的开关机，求一份月薪十万的工作。</description>
+<items>
+<rdf:Seq>
+<rdf:li resource="https://lo-li.icu/archives/19.html"/>
+<rdf:li resource="https://lo-li.icu/archives/17.html"/>
+<rdf:li resource="https://lo-li.icu/archives/Worker-Blog.html"/>
+<rdf:li resource="https://lo-li.icu/archives/15.html"/>
+<rdf:li resource="https://lo-li.icu/archives/5.html"/>
+<rdf:li resource="https://lo-li.icu/archives/6.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="https://lo-li.icu/archives/19.html">
+<title>TinyPng拯救你的图片和存储空间</title>
+<link>https://lo-li.icu/archives/19.html</link>
+<dc:date>2020-02-12T21:26:00+08:00</dc:date>
+<description>总所周知，图片一直是站长们的痛苦，过大的图片会是你的网站变得臃肿，拖慢你的网站速度，那有没有办法解决这个问题呢？当然有，TinyPng！是什么？TinyPng是一个图片压缩程序，他使用智能有损压缩技术将您的PNG文件的文件大小降低。通过选择性的减少图片中的颜色，只需要很少的字节数就能保存数据。对视觉的影响几乎不可见，但是在文件大小上有非常大的差别。怎么用？进入TinyPng中文官网单击下图所标注的位置上传照片即可，等到显示全部完成，点击Download All即可。根据我的测试，基本都可以缩小70%左右。它的限制非会员用户单次最多上传20张照片，每张照片不超过5MB，会员用户不限制且拥有图片CDN服务！其他除了网页，在Mac OS上，它提供本地应用，在WordPress上提供插件支持。</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/17.html">
+<title>Typecho博客主页静态化</title>
+<link>https://lo-li.icu/archives/17.html</link>
+<dc:date>2020-01-14T21:14:00+08:00</dc:date>
+<description>Typecho虽然在文章页因为评论不能做静态页面，但是在首页可以，静态不仅可以节省服务器的资源，还可以加速访问，以下是我的静态化代码。&lt;?php
+
+ini_set( 'date.timezone', 'PRC' );
+ 
+/* 缓存过期时间 单位：秒 */
+$expire = 86400;
+/* 主动刷新密码  格式：http://test.com/f5.php?password=123456 */
+$password = '123456';
+$file_time = @filemtime( 'index.html' );
+time() - $file_time &gt; $expire &amp;&amp; create_index();
+isset( $_GET['password'] ) &amp;&amp; $_GET['password'] == $password &amp;&amp; create_index();
+ 
+/**
+ * 生成 index.html
+ */
+function create_index()
+{
+    ob_start();
+    include( 'index.php' );
+    $content = ob_get_contents();
+    $content .= &quot;\n&lt;!-- Create time: &quot; . date( 'Y-m-d H:i:s' ) . &quot; --&gt;&quot;;
+    /* 调用更新 */
+    $content .= &quot;\n&lt;script language=javascript src='f5.php'&gt;&lt;/script&gt;&quot;;
+    ob_clean();
+    $res = file_put_contents( 'index.html', $content );
+    if ( $res !== false )
+    {
+        die( 'Create successful' );
+    }
+    else
+    {
+        die( 'Create error' );
+    }
+}记住，如果你的站点又搜索功能，请将搜索功能的修改action地址为/search&lt;div class=&quot;site-search col-3 kit-hidden-tb&quot;&gt;
+               &lt;form id=&quot;search&quot; method=&quot;post&quot; action=&quot;/search&quot; role=&quot;search&quot;&gt;
+                   &lt;label for=&quot;s&quot; class=&quot;sr-only&quot;&gt;&lt;?php _e('搜索关键字'); ?&gt;&lt;/label&gt;
+                   &lt;input type=&quot;text&quot; name=&quot;s&quot; class=&quot;text&quot; placeholder=&quot;&lt;?php _e('输入关键字搜索'); ?&gt;&quot; /&gt;
+                   &lt;button type=&quot;submit&quot; class=&quot;submit&quot;&gt;&lt;?php _e('搜索'); ?&gt;&lt;/button&gt;
+               &lt;/form&gt;
+           &lt;/div&gt;如果你的主页和我一样有一个天数统计，可以设置一个定时刷新，每天刷新一次，这个功能可以用python实现.
+import requests
+import time
+
+while True:
+    requests.get(&quot;https://youurl/f5?password=youpssword&quot;)
+    time.sleep(86400)
+
+</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/Worker-Blog.html">
+<title>利用CloudFlare Worker来搭建免费高速的博客</title>
+<link>https://lo-li.icu/archives/Worker-Blog.html</link>
+<dc:date>2020-01-13T12:04:00+08:00</dc:date>
+<description>注意：本篇文章部份内容引用了2890和kasuganosoras的内容是什么?Cloudflare workers + Github 实现的动态博客系统，使用边缘计算，无需服务器，Workers是CloudFlare提供的边缘计算，每天有10万次的访问次数，而且速度十分快。源代码Github项目地址伸手党可以直接复制下面这个我修改了CDN节点的版本，因为官方的CDN不稳定。// 定义 Github 项目，文章会从这里读取
+const github_base = &quot;kasuganosoras/frp-blog&quot;;
+
+// 设置站点信息
+var default_title     = &quot;SakuraFrp Blog - 樱花内网穿透官方博客&quot;;                    // 站点标题（显示在浏览器标题栏）
+var default_intitle     = &quot;SakuraFrp Blog&quot;;                                // 站点名称（显示在首页）
+var default_description  = &quot;欢迎访问 Sakura Frp 官方博客，本博客分享与 Frp 相关的技术以及记录一些日常。&quot;;     // 站点简介，有利于 SEO
+var site_domain         = &quot;blog.natfrp.org&quot;;                                // 站点域名
+var site_subtitle     = &quot;樱花内网穿透官方博客&quot;;                            // 站点副标题
+var site_favicon     = &quot;https://cn.tql.ink:4443/gitea/img/favicon.png&quot;;                // 站点 Logo
+
+// 博主信息
+var owner_name = &quot;Akkariin&quot;;                                    // 博主名字
+var owner_logo = &quot;https://secure.gravatar.com/avatar/80962ca1ced98d0e679b2bc315d049f2?s=256&quot;    // 博主头像
+var owner_desc = &quot;鸽子王/咸鱼/phper，日常水贴摸鱼，佛系出租服务器&quot;;                    // 博主简介
+
+// 设置站点资源文件地址
+var css_bootstrap     = &quot;https://cdn.lo-li.icu/wwf/bootstrap.min.css&quot;;    // Boostrap css 文件地址
+var css_hljs_github   = &quot;https://cdn.lo-li.icu/wwf/github.css&quot;;  // Highlight js css 地址
+var js_jquery         = &quot;https://cdn.lo-li.icu/wwf/jquery.min.js&quot;;        // JQuery 地址
+var js_bootstrap    = &quot;https://cdn.lo-li.icu/wwf/bootstrap.min.js&quot;;    // Bootstrap 地址
+var js_instantclick   = &quot;https://cdn.lo-li.icu/wwf/instantclick.min.js&quot;;    // InstantClick 地址
+var js_showdown     = &quot;https://cdn.lo-li.icu/wwf/showdown.min.js&quot;;        // Showdown 地址
+var js_showdown_table = &quot;https://cdn.lo-li.icu/wwf/showdown-table.min.js&quot;;    // Showdown table 地址
+var js_highlight    = &quot;https://cdn.lo-li.icu/wwf/highlight.min.js&quot;;    // Highlight 地址
+var js_highlight_pack = &quot;https://cdn.lo-li.icu/wwf/highlight.pack.js&quot;;        // Highlight pack 地址
+
+// 这是一些临时变量，无需修改
+var title = &quot;&quot;;
+var intitle = &quot;&quot;;
+var title2 = &quot;&quot;;
+var description = &quot;&quot;;
+var ctime = &quot;unknown&quot;;
+var isunknown = &quot;&quot;;
+
+addEventListener('fetch', event =&amp;gt; {
+  event.respondWith(handleRequest(event.request))
+});
+
+var header = `&amp;lt;!DOCTYPE HTML&amp;gt;
+&amp;lt;!-- 由 CloudFlare Workers Blog 强力驱动 --&amp;gt;
+&amp;lt;!-- SakuraFrp Blog 模板 1.0 by Akkariin --&amp;gt;
+&amp;lt;html lang=&quot;zh_CN&quot;&amp;gt;
+    &amp;lt;head&amp;gt;
+        &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&amp;gt;
+        &amp;lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&amp;gt;
+        &amp;lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=11&quot;&amp;gt;
+        &amp;lt;meta name=&quot;application-name&quot; content=&quot;SakuraFrp Blog&quot;&amp;gt;
+        &amp;lt;meta name=&quot;msapplication-TileColor&quot; content=&quot;#F1F1F1&quot;&amp;gt;
+        &amp;lt;link rel=&quot;shortcut icon&quot; href=&quot;${site_favicon}&quot; /&amp;gt;
+        &amp;lt;meta name=&quot;description&quot; content=&quot;{description}&quot;&amp;gt;
+        &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;${css_bootstrap}&quot; crossorigin=&quot;anonymous&quot;&amp;gt;
+        &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;${css_hljs_github}&quot;&amp;gt;
+        &amp;lt;title&amp;gt;{title}{title_2}&amp;lt;/title&amp;gt;
+        &amp;lt;style type=&quot;text/css&quot;&amp;gt;.pageid{margin-bottom:-26px}code{color:#484848;background-color:#f5f5f5;border-radius:0px;border:1px solid #dadada;}pre&amp;gt;code{color:unset;background-color:unset;border-radius:unset;border:0px;}.post-a {color: #000;text-decoration: none ! important;}.post-box {padding: 12px 20px 12px 20px;border-bottom: 1px solid rgba(0,0,0,0.07);cursor: pointer;border-left: 0px solid rgba(66, 66, 66, 0);transition-duration: 0.3s;}.post-box:hover {transition-duration: 0.3s;border-left: 5px solid rgba(66, 66, 66, 0.15);}.thread h2 {border-bottom: 1px solid rgb(238,238,238);padding-bottom: 10px;}.editor-preview pre, .editor-preview-side pre{padding: 0.5em;}.hljs{background: unset ! important;padding: 0px;}.CodeMirror{height: calc(100% - 320px);min-height: 360px;}.msgid{font-family:Consolas;}.tooltip {word-break: break-all;}h2 a{font-weight: 400;}body{/*background:url(https://i.natfrp.org/cbf5973ce9da283bc9abe307cdea7f30.jpg);*/font-family:'-apple-system','BlinkMacSystemFont','Segoe UI','Helvetica','Arial','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol' ! important;font-weight:400;background-attachment:fixed;background-size:cover;background-repeat:no-repeat;background-position:center;}h2 a{color: #000;} h2 a:hover{color: #000; text-decoration: none;}.full-width{width: 100%;}.thread img{vertical-align:text-bottom ! important;max-width:100% ! important;margin-top:8px;margin-bottom:8px;}.thread table{display:block;width:100%;overflow:auto;margin-bottom:8px;}.thread table tr{background-color:#fff;border-top:1px solid #c6cbd1;}.thread table tr:nth-child(2n){background-color:#f7f7f7;}.thread table th,.thread table td{padding:10px 12px 0px 12px;border:1px solid #dfe2e5;font-size:14px;}.thread table th {padding-bottom: 10px;background: #f7f7f7;}.thread pre{margin-bottom:16px;}pre{border:none ! important;}blockquote{font-size:15px ! important;}@media screen and(max-width:768px){.copyright{text-align:center;}}&amp;lt;/style&amp;gt;
+        &amp;lt;script&amp;gt;
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement(&quot;script&quot;);
+            hm.src = &quot;https://hm.baidu.com/hm.js?b1f3cc985ea87c4141634fa0572a1612&quot;;
+            var s = document.getElementsByTagName(&quot;script&quot;)[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+        &amp;lt;/script&amp;gt;
+    &amp;lt;/head&amp;gt;
+    &amp;lt;body&amp;gt;
+        &amp;lt;div class=&quot;container&quot;&amp;gt;
+            &amp;lt;div class=&quot;row&quot;&amp;gt;
+                &amp;lt;div class=&quot;col-sm-12&quot;&amp;gt;
+                    &amp;lt;h2&amp;gt;&amp;lt;a href=&quot;/&quot; class=&quot;post-a&quot;&amp;gt;{intitle}&amp;lt;/a&amp;gt;&amp;lt;/h2&amp;gt;
+                    &amp;lt;p&amp;gt;${site_subtitle}&amp;lt;/p&amp;gt;
+                    &amp;lt;hr&amp;gt;
+                &amp;lt;/div&amp;gt;
+                &amp;lt;div class=&quot;col-sm-9&quot;&amp;gt;
+                    &amp;lt;div class=&quot;thread&quot;&amp;gt;
+                        `;
+
+var modifyHeader = {};
+var cookieText = &quot;&quot;;
+
+function getRequestParams(str) {
+    var index = str.indexOf(&quot;?&quot;);
+    str = str.substring(index + 1, str.length);
+    if(typeof(str) == &quot;string&quot;){
+        u = str.split(&quot;&amp;amp;&quot;);
+        var get = {};
+        for(var i in u){
+            var j = u[i].split(&quot;=&quot;);
+            get[j[0]] = j[1];
+        }
+        return get;
+    } else {
+        return {};
+    }
+}
+
+async function bloghandle(request) {
+    var cookie = {};
+    var clist = undefined;
+    try {
+        cookieText.split(';').forEach(l =&amp;gt; {
+            var parts = l.split('=');
+            cookie[parts[0].trim()] = unescape((parts[1] || '').trim());
+        });
+    } catch(e) {
+        // 无可奉告
+    }
+    var $_GET = getRequestParams(request.url);
+    var urls = new URL(request.url);
+    var data = header;
+    if(urls.pathname == &quot;/&quot;) {
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+        const init = {
+        method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        var resptxt = await response.text();
+        if(cookie['list'] == undefined) {
+            var Days = 30; 
+            var exp = new Date(); 
+            exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+            modifyHeader = {
+                &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (resptxt) + &quot;;expires=&quot; + exp.toGMTString()
+            };
+        }
+        var json = JSON.parse(resptxt);
+        // console.log(json);
+        data += `&amp;lt;p&amp;gt;所有文章&amp;lt;/p&amp;gt;
+                        `;
+        var before_page = 0;
+        var current_page = 1;
+        var next_page = 2;
+        var pagenow = json.length;
+        var pageval = json.length - 5;
+        if($_GET['p'] != undefined &amp;amp;&amp;amp; $_GET['p'] != &quot;&quot;) {
+            pageval = json.length - (parseInt($_GET['p']) * 5);
+            pagenow = json.length - ((parseInt($_GET['p']) - 1) * 5) - 1;
+            next_page = parseInt($_GET['p']) + 1;
+            current_page = parseInt($_GET['p']);
+            before_page = parseInt($_GET['p']) - 1;
+        }
+        console.log(pageval);
+        var update_i = 0;
+        for(var i = pagenow;i &amp;gt;= pageval;i--) {
+        try {
+            var tmpfilename = encodeURIComponent(json[i].file
+            .replace(/&quot;/g, &quot;&quot;).replace(/posts\//ig, &quot;&quot;).replace(/\.md/ig, &quot;&quot;));
+            var tmptime = json[i].time;
+            var tmptitle = json[i].title;
+            data += `&amp;lt;a href=&quot;/${tmpfilename}&quot; class=&quot;post-a&quot;&amp;gt;
+                            &amp;lt;div class=&quot;post-box&quot;&amp;gt;
+                                &amp;lt;h4&amp;gt;${tmptitle}&amp;lt;/h4&amp;gt;
+                                &amp;lt;p&amp;gt;发表于 ${tmptime}&amp;lt;/p&amp;gt;
+                            &amp;lt;/div&amp;gt;
+                        &amp;lt;/a&amp;gt;
+                        `;
+            update_i++;
+        } catch(e) {
+            // 收声
+        }
+        }
+        console.log(update_i);
+        if(update_i == 0) {
+        data += `&amp;lt;p&amp;gt;&amp;lt;blockquote&amp;gt;暂时没有文章！&amp;lt;/blockquote&amp;gt;&amp;lt;/p&amp;gt;
+                `
+        }
+        data += `&amp;lt;br&amp;gt;
+                        &amp;lt;p class=&quot;text-left pageid&quot;&amp;gt;当前在第 ${current_page} 页&amp;lt;/p&amp;gt;
+                        &amp;lt;p class=&quot;text-right&quot;&amp;gt;
+                            `;
+        if(current_page &amp;gt; 1) {
+        data += `&amp;lt;a href=&quot;/?p=${before_page}&quot;&amp;gt;&amp;lt;button class=&quot;btn btn-default&quot;&amp;gt;上一页&amp;lt;/button&amp;gt;&amp;lt;/a&amp;gt;&amp;amp;nbsp; &amp;amp;nbsp;`;
+        }
+        if(update_i &amp;gt;= 5) {
+        data += `&amp;lt;a href=&quot;/?p=${next_page}&quot;&amp;gt;&amp;lt;button class=&quot;btn btn-default&quot;&amp;gt;下一页&amp;lt;/button&amp;gt;&amp;lt;/a&amp;gt;`;
+        }
+        data += `
+                        &amp;lt;/p&amp;gt;
+                    &amp;lt;/div&amp;gt;
+                `;
+        title = default_title;
+        intitle = default_intitle;
+        title2 = &quot;&quot;;
+    } else {
+        var uname = unescape(&quot;posts&quot; + urls.pathname + &quot;.md&quot;);
+        try {
+        clist = cookie['list'];
+        } catch(e) {
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+        const init = {
+            method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        clist = await response.text();
+        }
+        if(clist != undefined) {
+            try {
+                var json = JSON.parse(clist);
+                var found = false;
+                for(var i in json) {
+                    tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                    tmptime = json[i].time;
+                    tmptitle = json[i].title;
+                    if(tmpfilename == uname) {
+                        title = tmptitle;
+                        intitle = tmptitle;
+                        ctime = tmptime;
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+                    const init = {
+                        method: &quot;GET&quot;
+                    };
+                    const response = await fetch(url, init);
+                    clist = await response.text();
+                    var json = JSON.parse(clist);
+                    for(var i in json) {
+                        tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                        tmptime = json[i].time;
+                        tmptitle = json[i].title;
+                        if(tmpfilename == uname) {
+                            title = tmptitle;
+                            intitle = tmptitle;
+                            ctime = tmptime;
+                        }
+                    }
+                    var Days = 30; 
+                    var exp = new Date(); 
+                    exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+                    modifyHeader = {
+                        &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (clist) + &quot;;expires=&quot; + exp.toGMTString()
+                    };
+                }
+            } catch(e) {
+                // 收声
+            }
+        } else {
+            var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/list.json&quot;;
+            const init = {
+                method: &quot;GET&quot;
+            };
+            const response = await fetch(url, init);
+            var clist = await response.text();
+            var json = JSON.parse(clist);
+            for(var i in json) {
+                tmpfilename = json[i].file.replace(/&quot;/g, &quot;&quot;);
+                tmptime = json[i].time;
+                tmptitle = json[i].title;
+                if(tmpfilename == uname) {
+                    title = tmptitle;
+                    intitle = tmptitle;
+                    ctime = tmptime;
+                }
+            }
+            var Days = 30; 
+            var exp = new Date(); 
+            exp.setTime(exp.getTime() + Days*24*60*60*1000); 
+            modifyHeader = {
+                &quot;Set-Cookie&quot; : &quot;list=&quot;+ escape (clist) + &quot;;expires=&quot; + exp.toGMTString()
+            };
+        }
+        data += `&amp;lt;/div&amp;gt;
+                        &amp;lt;p class=&quot;text-center{isunknown}&quot;&amp;gt;&amp;lt;small&amp;gt;发表于 ${ctime}&amp;lt;/small&amp;gt;&amp;lt;/p&amp;gt;
+                        &amp;lt;textarea id=&quot;textdata&quot; style=&quot;display: none;&quot;&amp;gt;`;
+        var url = &quot;https://raw.githubusercontent.com/&quot; + github_base + &quot;/master/posts&quot; + urls.pathname + &quot;.md&quot;;
+        const init = {
+            method: &quot;GET&quot;
+        };
+        const response = await fetch(url, init);
+        if(response.status == 200) {
+            var resptxt = await response.text();
+            data += resptxt.replace(/&amp;amp;/g, &quot;&amp;amp;amp;&quot;).replace(/&amp;lt;/g, &quot;&amp;amp;lt;&quot;).replace(/&amp;gt;/g, &quot;&amp;amp;gt;&quot;);
+            description = resptxt.substring(0, 128).replace(/&quot;/ig, &quot;&quot;).replace(/\n/g, &quot; &quot;);
+            data += `&amp;lt;/textarea&amp;gt;
+                    &amp;lt;hr&amp;gt;
+                    &amp;lt;div id=&quot;comments&quot;&amp;gt;评论区加载中 qwq&amp;lt;/div&amp;gt;
+                `;
+        } else {
+            data += `### 404 Not Found
+未找到您访问的页面，原因可能是：
+- 该文章已被删除
+- 该文章已经更改名称
+- 您输入的链接不正确
+&amp;lt;a href=&quot;/&quot;&amp;gt;返回 ${default_intitle} 首页&amp;lt;/a&amp;gt;
+                    &amp;lt;/textarea&amp;gt;
+                `;
+            title = `404 Not Found`;
+            title2 = ` - ${default_title}`;
+            intitle = `未找到指定的页面`;
+            description = ``;
+            isunknown = &quot; hidden&quot;;
+        }
+        title2 = ` - ${default_title}`;
+    }
+    data += `&amp;lt;/div&amp;gt;
+                &amp;lt;div class=&quot;col-sm-3&quot;&amp;gt;
+                    &amp;lt;div style=&quot;padding: 16px;text-align: center;&quot;&amp;gt;
+                        &amp;lt;img src=&quot;${owner_logo}&quot; style=&quot;max-width: 220px;width: 100%;border-radius: 50%;&quot;&amp;gt;
+                        &amp;lt;h3&amp;gt;${owner_name}&amp;lt;/h3&amp;gt;
+                        &amp;lt;p class=&quot;text-left&quot;&amp;gt;${owner_desc}&amp;lt;/p&amp;gt;
+                        &amp;lt;hr&amp;gt;
+                        &amp;lt;div class=&quot;text-left&quot;&amp;gt;
+                            &amp;lt;h4&amp;gt;友情链接&amp;lt;/h4&amp;gt;
+                            &amp;lt;p&amp;gt;&amp;lt;a href=&quot;https://www.natfrp.org/&quot; target=&quot;_blank&quot;&amp;gt;Sakura Frp&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+                        &amp;lt;/div&amp;gt;
+                    &amp;lt;/div&amp;gt;
+                &amp;lt;/div&amp;gt;
+            &amp;lt;/div&amp;gt;
+            &amp;lt;div class=&quot;row&quot;&amp;gt;
+                &amp;lt;div class=&quot;col-sm-12&quot;&amp;gt;
+                &amp;lt;p&amp;gt;Powered by CloudFlare Workers | &amp;lt;a href=&quot;https://github.com/kasuganosoras/cloudflare-worker-blog&quot; target=&quot;_blank&quot;&amp;gt;Github&amp;lt;/a&amp;gt;&amp;lt;/p&amp;gt;
+                &amp;lt;p&amp;gt;&amp;amp;copy; 2019 ${default_intitle}&amp;lt;/p&amp;gt;
+                &amp;lt;br&amp;gt;&amp;lt;br&amp;gt;
+                &amp;lt;/div&amp;gt;
+            &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+        &amp;lt;script src=&quot;${js_jquery}&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_bootstrap}&quot; crossorigin=&quot;anonymous&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_instantclick}&quot; data-no-instant&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_showdown}&quot; type=&quot;text/javascript&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_showdown_table}&quot; type=&quot;text/javascript&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_highlight}&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;${js_highlight_pack}&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script src=&quot;https://comments.natfrp.org/comments.js?s=2&quot;&amp;gt;&amp;lt;/script&amp;gt;
+        &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
+            var init = {
+            site: &quot;${site_domain}&quot;,
+            cid: &quot;posts${urls.pathname}.md&quot;
+            };
+            hljs.initHighlightingOnLoad();
+            var md = new showdown.Converter({extensions: ['table']});
+            md.setOption('simplifiedAutoLink', true);
+            md.setOption('simpleLineBreaks', true);
+            md.setOption('openLinksInNewWindow', true);
+            md.setOption('noHeaderId', true);
+            window.onload = function() {
+                try {
+                    $(&quot;.thread&quot;).html(md.makeHtml($(&quot;#textdata&quot;).val()));
+                    document.querySelectorAll('pre code').forEach(function(e) {
+                        hljs.highlightBlock(e);
+                    });
+                    CommentsInit(comments, init);
+                } catch(e) {}
+            }
+        &amp;lt;/script&amp;gt;
+        &amp;lt;script data-no-instant&amp;gt;
+            InstantClick.init();
+            InstantClick.on('change', function() {
+                try {
+                    $(&quot;.thread&quot;).html(md.makeHtml($(&quot;#textdata&quot;).val()));
+                    document.querySelectorAll('pre code').forEach(function(e) {
+                        hljs.highlightBlock(e);
+                    });
+                    CommentsInit(comments, init);
+                } catch(e) {}
+            });
+        &amp;lt;/script&amp;gt;
+    &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+    `;
+    data = data.replace(/\{title\}/ig, title)
+        .replace(/\{intitle\}/ig, intitle)
+        .replace(/\{title\_2\}/ig, title2)
+        .replace(/\{isunknown\}/ig, isunknown)
+        .replace(/\{description\}/ig, description);
+    return data;
+}
+
+/**
+ * Respond to the request
+ * @param {Request} request
+ */
+async function handleRequest(request) {
+    if(new URL(request.url).protocol != &quot;https:&quot;) {
+        var rhttps = new Response(&quot;Location to https&quot;, {status: 301});
+        rhttps.headers.set(&quot;Location&quot;, request.url.replace(&quot;http://&quot;, &quot;https://&quot;));
+        return rhttps;
+    }
+    cookieText = request.headers.get(&quot;cookie&quot;);
+    var resp = new Response(await bloghandle(request), {status: 200});
+    resp.headers.set(&quot;Content-Type&quot;, &quot;text/html&quot;);
+    if(modifyHeader != undefined) {
+        for(var index in modifyHeader) {
+        resp.headers.set(index, modifyHeader[index]);
+        }
+    }
+    return resp;
+}`&lt;/pre&gt;
+
+## 如何写作？
+
+首先创建一个 Github 项目，名字随意，然后将这个项目 clone 到本地。
+&lt;pre&gt;`# 示例
+git clone https://github.com/kasuganosoras/cloudflare-worker-blog
+cd cloudflare-worker-blog/`&lt;/pre&gt;
+
+进入项目文件夹，新建一个 posts 文件夹
+&lt;pre&gt;`mkdir posts/`&lt;/pre&gt;
+
+在里面编写文章，内容一般用 .md 后缀即可，例如 helloworld.md
+
+写完之后回到项目根目录（就是上级目录），然后新建一个 list.json
+&lt;pre&gt;`touch list.json`&lt;/pre&gt;
+
+编辑 list.json，在里面写入以下内容
+&lt;pre&gt;`[
+  {
+    &quot;title&quot;:&quot;文章名称&quot;,
+    &quot;time&quot;:&quot;发布时间&quot;,
+    &quot;file&quot;:&quot;posts/helloworld.md（或者其他名字）&quot;
+  }
+]`&lt;/pre&gt;
+
+如果你有多篇文章就这样写：
+&lt;pre&gt;`[
+  {
+    &quot;title&quot;:&quot;文章1&quot;,
+    &quot;time&quot;:&quot;2019-06-01&quot;,
+    &quot;file&quot;:&quot;posts/1.md&quot;
+  },
+  {
+    &quot;title&quot;:&quot;文章2&quot;,
+    &quot;time&quot;:&quot;2019-06-03&quot;,
+    &quot;file&quot;:&quot;posts/2.md&quot;
+  },
+  {
+    &quot;title&quot;:&quot;文章3&quot;,
+    &quot;time&quot;:&quot;2019-06-07&quot;,
+    &quot;file&quot;:&quot;posts/3.md&quot;
+  } &amp;lt;--注意json格式，最后一篇文章的这里不需要逗号
+]
+一切就绪后，使用 git push 命令将代码推送到仓库上。然后修改你的 workers，设置 github_base 为你的仓库名称，例如 kasuganosoras/cloudflare-worker-blog现在访问你的 Workers 即可看到文章。自定义域名获取到自己的**.workers.dev域名 Cname 到(**.workers.dev)然后去 Workers 点击 ADD route输入自定义域名，例如 iloli.icu/_ 后面要加上 /_ ，下面的 workers 选择刚才的项目</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/15.html">
+<title>自建免费高速的静态资源CDN</title>
+<link>https://lo-li.icu/archives/15.html</link>
+<dc:date>2020-01-01T11:53:00+08:00</dc:date>
+<description>文件存储在哪儿？我采用了Github作为文件存储的位置，网页版最大上传20MB，git最大100MB想要更大需要下载一个软件，但是暂时够用。上面这张图片就是存在我搭建的CDN里的。速度慢，怎么解决？众所周知Github的速度在国内特别慢，那我们只能反向代理一下，这里为了节约VPS的钱，我使用了CloudFlare Worker，别看CloudFlare的速度在中国也就只比Github快个几倍，但是他的Worker却不限速，只限制了一天20万次的请求数，这完全够用了，以下是CloudFlare Worker反向代理的源代码。e strict'
+
+/**
+ * static files (404.html, sw.js, conf.js)
+ */
+const ASSET_URL = 'https://raw.githubusercontent.com/你的GithubID/仓库名/master/'
+
+const JS_VER = 10
+const MAX_RETRY = 1
+
+/** @type {RequestInit} */
+const PREFLIGHT_INIT = {
+  status: 204,
+  headers: new Headers({
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET,POST,PUT,PATCH,TRACE,DELETE,HEAD,OPTIONS',
+    'access-control-max-age': '1728000',
+  }),
+}
+
+/**
+ * @param {any} body
+ * @param {number} status
+ * @param {Object&amp;lt;string, string&amp;gt;} headers
+ */
+function makeRes(body, status = 200, headers = {}) {
+  headers['--ver'] = JS_VER
+  headers['access-control-allow-origin'] = '*'
+  return new Response(body, {status, headers})
+}
+
+/**
+ * @param {string} urlStr 
+ */
+function newUrl(urlStr) {
+  try {
+    return new URL(urlStr)
+  } catch (err) {
+    return null
+  }
+}
+
+addEventListener('fetch', e =&amp;gt; {
+  const ret = fetchHandler(e)
+    .catch(err =&amp;gt; makeRes('cfworker error:\n' + err.stack, 502))
+  e.respondWith(ret)
+})
+
+/**
+ * @param {FetchEvent} e 
+ */
+async function fetchHandler(e) {
+  const req = e.request
+  const urlStr = req.url
+  const urlObj = new URL(urlStr)
+  const path = urlObj.href.substr(urlObj.origin.length)
+
+  if (urlObj.protocol === 'http:') {
+    urlObj.protocol = 'https:'
+    return makeRes('', 301, {
+      'strict-transport-security': 'max-age=99999999; includeSubDomains; preload',
+      'location': urlObj.href,
+    })
+  }
+
+  if (path.startsWith('/http/')) {
+    return httpHandler(req, path.substr(6))
+  }
+
+  switch (path) {
+  case '/http':
+    return makeRes('请更新 cfworker 到最新版本!')
+  case '/ws':
+    return makeRes('not support', 400)
+  case '/works':
+    return makeRes('it works')
+  default:
+    // static files
+    return fetch(ASSET_URL + path)
+  }
+}
+
+/**
+ * @param {Request} req
+ * @param {string} pathname
+ */
+function httpHandler(req, pathname) {
+  const reqHdrRaw = req.headers
+  if (reqHdrRaw.has('x-jsproxy')) {
+    return Response.error()
+  }
+
+  // preflight
+  if (req.method === 'OPTIONS' &amp;amp;&amp;amp;
+      reqHdrRaw.has('access-control-request-headers')
+  ) {
+    return new Response(null, PREFLIGHT_INIT)
+  }
+
+  let acehOld = false
+  let rawSvr = ''
+  let rawLen = ''
+  let rawEtag = ''
+
+  const reqHdrNew = new Headers(reqHdrRaw)
+  reqHdrNew.set('x-jsproxy', '1')
+
+  // 此处逻辑和 http-dec-req-hdr.lua 大致相同
+  // https://github.com/EtherDream/jsproxy/blob/master/lua/http-dec-req-hdr.lua
+  const refer = reqHdrNew.get('referer')
+  const query = refer.substr(refer.indexOf('?') + 1)
+  if (!query) {
+    return makeRes('missing params', 403)
+  }
+  const param = new URLSearchParams(query)
+
+  for (const [k, v] of Object.entries(param)) {
+    if (k.substr(0, 2) === '--') {
+      // 系统信息
+      switch (k.substr(2)) {
+      case 'aceh':
+        acehOld = true
+        break
+      case 'raw-info':
+        [rawSvr, rawLen, rawEtag] = v.split('|')
+        break
+      }
+    } else {
+      // 还原 HTTP 请求头
+      if (v) {
+        reqHdrNew.set(k, v)
+      } else {
+        reqHdrNew.delete(k)
+      }
+    }
+  }
+  if (!param.has('referer')) {
+    reqHdrNew.delete('referer')
+  }
+
+  // cfworker 会把路径中的 `//` 合并成 `/`
+  const urlStr = pathname.replace(/^(https?):\/+/, '$1://')
+  const urlObj = newUrl(urlStr)
+  if (!urlObj) {
+    return makeRes('invalid proxy url: ' + urlStr, 403)
+  }
+
+  /** @type {RequestInit} */
+  const reqInit = {
+    method: req.method,
+    headers: reqHdrNew,
+    redirect: 'manual',
+  }
+  if (req.method === 'POST') {
+    reqInit.body = req.body
+  }
+  return proxy(urlObj, reqInit, acehOld, rawLen, 0)
+}
+
+/**
+ * 
+ * @param {URL} urlObj 
+ * @param {RequestInit} reqInit 
+ * @param {number} retryTimes 
+ */
+async function proxy(urlObj, reqInit, acehOld, rawLen, retryTimes) {
+  const res = await fetch(urlObj.href, reqInit)
+  const resHdrOld = res.headers
+  const resHdrNew = new Headers(resHdrOld)
+
+  let expose = '*'
+
+  for (const [k, v] of resHdrOld.entries()) {
+    if (k === 'access-control-allow-origin' ||
+        k === 'access-control-expose-headers' ||
+        k === 'location' ||
+        k === 'set-cookie'
+    ) {
+      const x = '--' + k
+      resHdrNew.set(x, v)
+      if (acehOld) {
+        expose = expose + ',' + x
+      }
+      resHdrNew.delete(k)
+    }
+    else if (acehOld &amp;amp;&amp;amp;
+      k !== 'cache-control' &amp;amp;&amp;amp;
+      k !== 'content-language' &amp;amp;&amp;amp;
+      k !== 'content-type' &amp;amp;&amp;amp;
+      k !== 'expires' &amp;amp;&amp;amp;
+      k !== 'last-modified' &amp;amp;&amp;amp;
+      k !== 'pragma'
+    ) {
+      expose = expose + ',' + k
+    }
+  }
+
+  if (acehOld) {
+    expose = expose + ',--s'
+    resHdrNew.set('--t', '1')
+  }
+
+  // verify
+  if (rawLen) {
+    const newLen = resHdrOld.get('content-length') || ''
+    const badLen = (rawLen !== newLen)
+
+    if (badLen) {
+      if (retryTimes &amp;lt; MAX_RETRY) {
+        urlObj = await parseYtVideoRedir(urlObj, newLen, res)
+        if (urlObj) {
+          return proxy(urlObj, reqInit, acehOld, rawLen, retryTimes + 1)
+        }
+      }
+      return makeRes(res.body, 400, {
+        '--error': `bad len: ${newLen}, except: ${rawLen}`,
+        'access-control-expose-headers': '--error',
+      })
+    }
+
+    if (retryTimes &amp;gt; 1) {
+      resHdrNew.set('--retry', retryTimes)
+    }
+  }
+
+  let status = res.status
+
+  resHdrNew.set('access-control-expose-headers', expose)
+  resHdrNew.set('access-control-allow-origin', '*')
+  resHdrNew.set('--s', status)
+  resHdrNew.set('--ver', JS_VER)
+
+  resHdrNew.delete('content-security-policy')
+  resHdrNew.delete('content-security-policy-report-only')
+  resHdrNew.delete('clear-site-data')
+
+  if (status === 301 ||
+      status === 302 ||
+      status === 303 ||
+      status === 307 ||
+      status === 308
+  ) {
+    status = status + 10
+  }
+
+  return new Response(res.body, {
+    status,
+    headers: resHdrNew,
+  })
+}
+
+/**
+ * @param {URL} urlObj 
+ */
+function isYtUrl(urlObj) {
+  return (
+    urlObj.host.endsWith('.googlevideo.com') &amp;amp;&amp;amp;
+    urlObj.pathname.startsWith('/videoplayback')
+  )
+}
+
+/**
+ * @param {URL} urlObj 
+ * @param {number} newLen 
+ * @param {Response} res 
+ */
+async function parseYtVideoRedir(urlObj, newLen, res) {
+  if (newLen &amp;gt; 2000) {
+    return null
+  }
+  if (!isYtUrl(urlObj)) {
+    return null
+  }
+  try {
+    const data = await res.text()
+    urlObj = new URL(data)
+  } catch (err) {
+    return null
+  }
+  if (!isYtUrl(urlObj)) {
+    return null
+  }
+  return urlObj
+}
+     (adsbygoogle = window.adsbygoogle || []).push({});
+绑定自己的域名。所有的事情都解决了，我们还要做最后一件事，绑定自己的域名。获取到自己的**.workers.dev域名 Cname 到(**.workers.dev)然后去 Workers 点击 ADD route输入自定义域名，例如 iloli.icu/* 后面要加上 /* ，下面的 workers 选择刚才的项目记住千万不要点击让CloudFlare代理，代理过后走的洛杉矶的服务器，国内500kb左右，而Worker却是香港的T级数据处理中心，速度可以跑到你当前网速的满速。</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/5.html">
+<title>Vim学习笔记</title>
+<link>https://lo-li.icu/archives/5.html</link>
+<dc:date>2019-11-30T20:22:00+08:00</dc:date>
+<description>注意:^是Ctrl注意:要控制窗口，需要先按下Ctrl+w作用命令横向增加分屏:sp纵向增加分屏:vsp切换到下一个窗口w互换窗口f关闭当前窗口，但不能关闭最后一个窗口c退出当前窗口q关闭其他窗口o打开内置文件浏览器:e打开当前目录下的文件:e + 文件名新建文件:n + 文件名另存为:w + 文件名保存并退出:wq保存并退出:x强制退出:q！保存:w进入编辑模式i进入可视模式（选择模式）v进入可视行模式V进入可视块模式^V进入末行模式:进入末行模式ESC撤回刚刚的修改u复制y复制一行yy粘贴p替换当前字符r替换当前光标后的字符R左h下j上k右l移动到顶部gg移动到末尾G移动到对应行数数字 + gg &amp; 数字 + G撤回刚刚撤回的修改^r向上翻页^b向下翻页^f移动到屏幕顶部H移动到屏幕中间M移动到屏幕底部L切换到上一段{切换到下一段}添加标记,名称为字母mx + 字母返回到标记字母得到位置`+ 字母打开方式# 打开后定位到制定行
+$ vim + 文件名 + 行数`&lt;/pre&gt;&lt;pre&gt;`# 定位到上一次退出位置
+$ vim + 文件名 +</description>
+</item>
+<item rdf:about="https://lo-li.icu/archives/6.html">
+<title>小说更新提示工具</title>
+<link>https://lo-li.icu/archives/6.html</link>
+<dc:date>2019-09-12T20:14:00+08:00</dc:date>
+<description>好久没有写文章了，这次带来的是我自己写的小说更新提示工具。我原本是准备写一个小说内容的爬虫的，但是最近学校说要打击盗版，支持正版，因此我写了小说更新提示工具。废话不多说，上代码!需求模块requests（爬虫模块）代码# 导入爬虫模块，正则模块
+import requests
+import re
+import time
+# 询问小说名
+book_name = input('请输入需要查询的小说名称:')
+# 获取搜索页源代码
+request = requests.get('https://www.biquge5200.cc/modules/article/search.php?searchkey=%s' % book_name)
+request = request.text
+# 清洗
+book_url_list = re.findall(r'&amp;lt;td class=&quot;odd&quot;&amp;gt;&amp;lt;a href=&quot;(.*?)&quot;&amp;gt;',request)
+x = 0
+Len = len(book_url_list)
+if Len &amp;gt;= 8:
+    for m in range(8):
+        book_request = requests.get(book_url_list[x])
+        book_request = book_request.text
+        book_name = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        book_number = re.findall(r'https://www.biquge5200.cc/(.*?)/',book_url_list[x])[0]
+        book_author = re.findall(r'&amp;lt;meta property=&quot;og:novel:author&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        print('书名:%s  编号:%s  作者:%s' % (book_name,book_number,book_author))
+        x += 1
+else:
+    for book_url_src in book_url_list:
+        book_request = requests.get(book_url_src)
+        book_request = book_request.text
+        book_name = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        book_number = re.findall(r'https://www.biquge5200.cc/(.*?)/',book_url_src)[0]
+        book_author = re.findall(r'&amp;lt;meta property=&quot;og:novel:author&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        print('书名:%s  编号:%s  作者:%s' % (book_name,book_number,book_author))
+print('最多显示8个结果！')
+# 用信息提示输入框输入一个统一资源定位符并放入一个变量
+url = input('请输入你要监视更新的小说网址编号:') 
+url = 'http://www.biquge5200.cc/%s' % url
+# 模拟浏览器发送一个Http Get请求。
+request = requests.get(url)
+# 设置编码
+request.encoding = 'gbk'
+# 将网页源代码存入变量以方便清洗
+html = request.text
+# 获取小说名称
+title = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',html)[0]
+# 将url_ord设置为空
+url_old = ''
+# 清洗网页内容
+while True:
+    request = requests.get(url)
+    dl = re.findall(r'&amp;lt;dl&amp;gt;.*&amp;lt;/dl&amp;gt;',html,re.S)[0]
+    a = re.findall(r'&amp;lt;dd&amp;gt;&amp;lt;a href=&quot;(.*?)&quot;&amp;gt;(.*?)&amp;lt;/a&amp;gt;&amp;lt;/dd&amp;gt;',dl)
+    # 获取每一章的链接和名称
+    for book in a:
+        book_url,book_title = book
+        book_url = 'http://www.biquge5200.cc%s' % book_url
+        '''你的通知装置'''
+    if book_title != url_old:
+        severjiang = requests.get(severjiang_url)
+        url_old = book_title
+        print('发现新内容，已向手机发送通知')
+    else:
+        print('没有新内容')
+    time.sleep(30)
+ServerChan通知装置我推荐使用ServerChan,他是一个简单的微信公众号通知工具，只需要一个Get请求就可以向手机发送通知，最主要的是他是一个开源项目！！！</description>
+</item>
+</rdf:RDF>

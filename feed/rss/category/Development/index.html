@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://purl.org/rss/1.0/"
+xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel rdf:about="https://lo-li.icu/feed/rss/category/Development/">
+<title>FutureApple的博客 - 开发</title>
+<link>https://lo-li.icu/category/Development/</link>
+<description></description>
+<items>
+<rdf:Seq>
+<rdf:li resource="https://lo-li.icu/archives/6.html"/>
+</rdf:Seq>
+</items>
+</channel>
+<item rdf:about="https://lo-li.icu/archives/6.html">
+<title>小说更新提示工具</title>
+<link>https://lo-li.icu/archives/6.html</link>
+<dc:date>2019-09-12T20:14:00+08:00</dc:date>
+<description>好久没有写文章了，这次带来的是我自己写的小说更新提示工具。我原本是准备写一个小说内容的爬虫的，但是最近学校说要打击盗版，支持正版，因此我写了小说更新提示工具。废话不多说，上代码!需求模块requests（爬虫模块）代码# 导入爬虫模块，正则模块
+import requests
+import re
+import time
+# 询问小说名
+book_name = input('请输入需要查询的小说名称:')
+# 获取搜索页源代码
+request = requests.get('https://www.biquge5200.cc/modules/article/search.php?searchkey=%s' % book_name)
+request = request.text
+# 清洗
+book_url_list = re.findall(r'&amp;lt;td class=&quot;odd&quot;&amp;gt;&amp;lt;a href=&quot;(.*?)&quot;&amp;gt;',request)
+x = 0
+Len = len(book_url_list)
+if Len &amp;gt;= 8:
+    for m in range(8):
+        book_request = requests.get(book_url_list[x])
+        book_request = book_request.text
+        book_name = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        book_number = re.findall(r'https://www.biquge5200.cc/(.*?)/',book_url_list[x])[0]
+        book_author = re.findall(r'&amp;lt;meta property=&quot;og:novel:author&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        print('书名:%s  编号:%s  作者:%s' % (book_name,book_number,book_author))
+        x += 1
+else:
+    for book_url_src in book_url_list:
+        book_request = requests.get(book_url_src)
+        book_request = book_request.text
+        book_name = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        book_number = re.findall(r'https://www.biquge5200.cc/(.*?)/',book_url_src)[0]
+        book_author = re.findall(r'&amp;lt;meta property=&quot;og:novel:author&quot; content=&quot;(.*?)&quot;/&amp;gt;',book_request)[0]
+        print('书名:%s  编号:%s  作者:%s' % (book_name,book_number,book_author))
+print('最多显示8个结果！')
+# 用信息提示输入框输入一个统一资源定位符并放入一个变量
+url = input('请输入你要监视更新的小说网址编号:') 
+url = 'http://www.biquge5200.cc/%s' % url
+# 模拟浏览器发送一个Http Get请求。
+request = requests.get(url)
+# 设置编码
+request.encoding = 'gbk'
+# 将网页源代码存入变量以方便清洗
+html = request.text
+# 获取小说名称
+title = re.findall(r'&amp;lt;meta property=&quot;og:title&quot; content=&quot;(.*?)&quot;/&amp;gt;',html)[0]
+# 将url_ord设置为空
+url_old = ''
+# 清洗网页内容
+while True:
+    request = requests.get(url)
+    dl = re.findall(r'&amp;lt;dl&amp;gt;.*&amp;lt;/dl&amp;gt;',html,re.S)[0]
+    a = re.findall(r'&amp;lt;dd&amp;gt;&amp;lt;a href=&quot;(.*?)&quot;&amp;gt;(.*?)&amp;lt;/a&amp;gt;&amp;lt;/dd&amp;gt;',dl)
+    # 获取每一章的链接和名称
+    for book in a:
+        book_url,book_title = book
+        book_url = 'http://www.biquge5200.cc%s' % book_url
+        '''你的通知装置'''
+    if book_title != url_old:
+        severjiang = requests.get(severjiang_url)
+        url_old = book_title
+        print('发现新内容，已向手机发送通知')
+    else:
+        print('没有新内容')
+    time.sleep(30)
+ServerChan通知装置我推荐使用ServerChan,他是一个简单的微信公众号通知工具，只需要一个Get请求就可以向手机发送通知，最主要的是他是一个开源项目！！！</description>
+</item>
+</rdf:RDF>
